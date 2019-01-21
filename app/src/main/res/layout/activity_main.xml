@@ -93,7 +93,7 @@
                 tools:layout_editor_absoluteY="32dp" />
 
             <ProgressBar
-                android:id="@+id/simpleProgressBar"
+                android:id="@+id/pBar"
                 android:layout_width="197dp"
                 android:layout_height="170dp"
                 android:layout_centerHorizontal="true"

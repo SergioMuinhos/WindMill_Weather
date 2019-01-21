@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public String idZona = "";
     public int idProv = 0;
     TextView textview;
-   public ProgressBar pDialog;
+    ProgressBar pDialog;
     NodeList nodelist;
     ImageView imgView;
     TabItem hoy,manana,pasado;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         //Creamos los dos Spinner de Provincias y Localidades
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
-        pDialog =findViewById(R.id.simpleProgressBar);
+       pDialog =findViewById(R.id.pBar);
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
 
         spinnerProvincias.setAdapter(adapterProv);
@@ -162,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
 
-                    pDialog = new ProgressBar(MainActivity.this);
+                   // pDialog.setVisibility(View.INVISIBLE);
                     //pDialog.setMessage("Cargando...");
-                    pDialog.setIndeterminate(false);
-                    pDialog.setVisibility(View.VISIBLE);
+                    //pDialog.setIndeterminate(false);
+                  //  pDialog.setVisibility(View.INVISIBLE);
                         try {
                             if (isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
@@ -537,6 +537,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(String... strings) {
+            pDialog.setVisibility(View.INVISIBLE);
             return downloadImage(strings[0]);
         }
 
@@ -544,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgTV);
             imgView.setImageBitmap(bitmap);
-
+            pDialog.setVisibility(View.INVISIBLE);
         }
     }
 
