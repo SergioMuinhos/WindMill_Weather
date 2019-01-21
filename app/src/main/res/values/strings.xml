@@ -3,4 +3,5 @@
     <string name="today">HOY</string>
     <string name="tomorrow">MAÑANA</string>
     <string name="after">PASADO</string>
+    <string name="alert">ALERT!</string>
 </resources>

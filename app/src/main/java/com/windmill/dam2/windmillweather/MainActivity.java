@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //  Toast.makeText(MainActivity.this,"Has Seleccionado:"+position,Toast.LENGTH_SHORT).show();
-                ArrayAdapter<String> adapterLoc = null;//=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_dropdown_item,localidades);
+                ArrayAdapter<String> adapterLoc=null;//=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_dropdown_item,localidades);
 
                 switch (position) {
                     case 0:
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-                spinnerLocalidades.setAdapter(adapterLoc);
+                spinnerLocalidades.setAdapter(adapterLoc );
 
 
             }
@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                     pDialog.setMessage("Cargando...");
                     pDialog.setIndeterminate(false);
                     pDialog.show();
-                  //  do {
                         try {
                             if (isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
@@ -192,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("Error en comprobar conexion", e.getLocalizedMessage());
                             e.printStackTrace();
                         }
-                   // }while (isOnline(getApplicationContext()));
             }
 
 
@@ -275,12 +273,6 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.pDialog.hide();
                 Log.e("Error en el doInBackground",e.getMessage());
                 e.printStackTrace();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//                builder.setMessage("Importante")
-//                        .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
-//                builder.create().show();
-               // builder.show();
-              //  onPause();
             }  return null;
 
         }
@@ -323,8 +315,6 @@ public class MainActivity extends AppCompatActivity {
                         new cargarImagenTempMin().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
                     }
 
-
-
                     //MAÑANA
                     //Cielo
 
@@ -343,7 +333,6 @@ public class MainActivity extends AppCompatActivity {
                         textview= findViewById(R.id.textML);
                         textview.setText(dato.getFirstChild().getNodeValue()+"%");
                     }
-
 
                     //TARDE
                     //Cielo
@@ -388,20 +377,18 @@ public class MainActivity extends AppCompatActivity {
                         textview.setText("Última Actualización: "+dato.getFirstChild().getNodeValue().substring(0,10));
                     }
 
-
-
-
                 }
             }
-            // pDialog.dismiss();
+
         }
 
         @Override
         protected void onCancelled(Void aVoid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setMessage("Importante")
-                    .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
-            builder.create().show();
+            builder.setMessage("Alert!")
+                    .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias")
+                    .create()
+                    .show();
         }
     }
 
