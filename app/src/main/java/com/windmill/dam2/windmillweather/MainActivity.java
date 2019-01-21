@@ -1,7 +1,6 @@
 package com.windmill.dam2.windmillweather;
-import android.app.Activity;
+
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public String idZona = "";
     public int idProv = 0;
     TextView textview;
-   public ProgressDialog pDialog;
+   public ProgressBar pDialog;
     NodeList nodelist;
     ImageView imgView;
     TabItem hoy,manana,pasado;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         //Creamos los dos Spinner de Provincias y Localidades
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
-
+        pDialog =findViewById(R.id.simpleProgressBar);
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
 
         spinnerProvincias.setAdapter(adapterProv);
@@ -162,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
 
-                    pDialog = new ProgressDialog(MainActivity.this);
-                    pDialog.setMessage("Cargando...");
+                    pDialog = new ProgressBar(MainActivity.this);
+                    //pDialog.setMessage("Cargando...");
                     pDialog.setIndeterminate(false);
-                    pDialog.show();
+                    pDialog.setVisibility(View.VISIBLE);
                         try {
                             if (isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
@@ -208,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
 
         pestanas.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            @Nullable
             public void onTabSelected(TabLayout.Tab tab) {
                 try {
                     // Toast.makeText(MainActivity.this,"Seleccionado: "+tab.getText(),Toast.LENGTH_SHORT).show();
@@ -270,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 nodelist=doc.getElementsByTagName("item");
 
             }catch (Exception e){
-                MainActivity.this.pDialog.hide();
+                MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
                 Log.e("Error en el doInBackground",e.getMessage());
                 e.printStackTrace();
             }  return null;
@@ -515,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgNV);
             imgView.setImageBitmap(bitmap);
-            pDialog.dismiss();
+            pDialog.setVisibility(View.INVISIBLE);
         }
     }
 
