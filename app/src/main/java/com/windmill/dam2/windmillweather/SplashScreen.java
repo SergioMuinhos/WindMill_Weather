@@ -2,9 +2,11 @@ package com.windmill.dam2.windmillweather;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Debug;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.LogPrinter;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -19,16 +21,16 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        gifImageView=(GifImageView) findViewById(R.id.splashGIF);
+        gifImageView= findViewById(R.id.splashGIF);
 //Metemos el GiF en el SplashScreen
         try{
-            InputStream inputStream= getAssets().open("splash.gif");
+            InputStream inputStream= getAssets().open("splash2.gif");
             byte[] bytes = IOUtils.toByteArray(inputStream);
             gifImageView.setBytes(bytes);
             gifImageView.startAnimation();
 
         }catch (IOException e){
-
+            System.out.print("Ha petado el GIF");
         }
         new Handler().postDelayed(new Runnable() {
             @Override
