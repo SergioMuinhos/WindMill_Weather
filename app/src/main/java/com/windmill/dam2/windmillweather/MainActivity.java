@@ -167,9 +167,7 @@ public class MainActivity extends AppCompatActivity {
                   //  pDialog.setVisibility(View.INVISIBLE);
                         try {
                             if (!isOnline(getApplicationContext())) {
-                                new DownloadXML().execute(enlaces);
-                            } else {
-                               // pDialog.hide();
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setMessage("Conectese a una red de datos para poder utilizar la aplicacion.")
                                         .setTitle("Error")
@@ -185,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
                                         });
                                 builder.create();
                                 builder.show();
+                            } else {
+                                new DownloadXML().execute(enlaces);
+                               // pDialog.hide();
+
                             }
                         } catch (Exception e) {
                             Log.e("Error en comprobar conexion", e.getLocalizedMessage());
