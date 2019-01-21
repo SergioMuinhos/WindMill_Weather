@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     pDialog.show();
                   //  do {
                         try {
-                            if (!isOnline(getApplicationContext())) {
+                            if (isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
                             } else {
                                // pDialog.hide();
