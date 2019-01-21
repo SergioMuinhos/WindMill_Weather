@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //  Toast.makeText(MainActivity.this,"Has Seleccionado:"+position,Toast.LENGTH_SHORT).show();
-                ArrayAdapter<String> adapterLoc=null;//=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_dropdown_item,localidades);
+                ArrayAdapter<String> adapterLoc=null;
 
                 switch (position) {
                     case 0:
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     //pDialog.setIndeterminate(false);
                   //  pDialog.setVisibility(View.INVISIBLE);
                         try {
-                            if (isOnline(getApplicationContext())) {
+                            if (!isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
                             } else {
                                // pDialog.hide();
@@ -242,10 +242,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
-        // new DownloadXML().execute(URL);
-
-
     }
 
 
@@ -283,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
+
 
             for(int i=0;i<nodelist.getLength();i++){
                 Node nNode= nodelist.item(i);
