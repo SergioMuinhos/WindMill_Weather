@@ -3,6 +3,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -159,27 +161,37 @@ public class MainActivity extends AppCompatActivity {
                 idZona=idProv+String.format("%02d",position+1);
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
-                try {
-                pDialog=new ProgressDialog(MainActivity.this);
-                pDialog.setMessage("Cargando...");
-                pDialog.setIndeterminate(false);
-                pDialog.show();
 
-                    if(!isOnline(getApplicationContext() )){
-                    new DownloadXML().execute(enlaces);
-                    }else{
-                        pDialog.hide();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setMessage("Conectese a una red de datos para poder utilizar la aplicacion.")
-                                .setTitle("Error");
-                        builder.create();
-                        builder.show();
-                    }
-                }catch (Exception e){
-                Log.e("Error en comprobar conexion",e.getLocalizedMessage());
-                e.printStackTrace();
-
-                }
+                    pDialog = new ProgressDialog(MainActivity.this);
+                    pDialog.setMessage("Cargando...");
+                    pDialog.setIndeterminate(false);
+                    pDialog.show();
+                  //  do {
+                        try {
+                            if (!isOnline(getApplicationContext())) {
+                                new DownloadXML().execute(enlaces);
+                            } else {
+                                pDialog.hide();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setMessage("Conectese a una red de datos para poder utilizar la aplicacion.")
+                                        .setTitle("Error")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
+                                            }
+                                        });
+                                builder.create();
+                                builder.show();
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error en comprobar conexion", e.getLocalizedMessage());
+                            e.printStackTrace();
+                        }
+                   // }while (isOnline(getApplicationContext()));
             }
 
 
