@@ -38,6 +38,7 @@ dependencies {
     //Agragamos las librerias para poder meter un GIF
     implementation 'com.felipecsl:gifimageview:2.1.0'
     implementation 'commons-io:commons-io:2.4'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
 
 }

@@ -1,8 +1,12 @@
 package com.windmill.dam2.windmillweather;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabItem;
@@ -17,6 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public String idZona = "";
     public int idProv = 0;
     TextView textview;
-    ProgressDialog pDialog;
+   public ProgressDialog pDialog;
     NodeList nodelist;
     ImageView imgView;
     TabItem hoy,manana,pasado;
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             "Ribas de Sil", "Ribeira de Piquín", "Riotorto", "Samos", "Rábade", "Sarria", "O Saviñao", "Sober", "Taboada",
             "Trabada", "Triacastela", "O Valadouro", "O Vicedo", "Vilalba", "Viveiro"};
 
-    public String[] coruña = new String[]{"Abegondo", "Ames", "Aranga", "Ares", "Arteixo", "Arzúa", "A Baña", "Bergondo", "Betanzos",
+    public String[] coruna = new String[]{"Abegondo", "Ames", "Aranga", "Ares", "Arteixo", "Arzúa", "A Baña", "Bergondo", "Betanzos",
             "Boimorto", "Boiro", "Boqueixón", "Brión", "Cabana de Bergantiños", "Cabanas", "Camariñas", "Cambre", "A Capela",
             "Carballo", "Carnota", "Carral", "Cedeira", "Cee", "Cerceda", "Cerdido", "Cesuras", "Coirós", "Corcubión",
             "Coristanco", "A Coruña", "Culleredo", "Curtis", "Dodro", "Dumbría", "Fene", "Ferrol", "Fisterra", "Frades", "Irixoa",
@@ -97,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Creamos los dos Spinner de Provincias y Localidades
-        spinnerProvincias = (Spinner) findViewById(R.id.provincia);
-        spinnerLocalidades = (Spinner) findViewById(R.id.localidad);
+        spinnerProvincias =  findViewById(R.id.provincia);
+        spinnerLocalidades =  findViewById(R.id.localidad);
 
-        ArrayAdapter<String> adapterProv = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
+        ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
 
         spinnerProvincias.setAdapter(adapterProv);
 
@@ -130,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         idProv = 150;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, coruña);
+                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, coruna);
                         break;
                 }
 
@@ -153,12 +159,28 @@ public class MainActivity extends AppCompatActivity {
                 idZona=idProv+String.format("%02d",position+1);
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
-
+                try {
                 pDialog=new ProgressDialog(MainActivity.this);
                 pDialog.setMessage("Cargando...");
                 pDialog.setIndeterminate(false);
                 pDialog.show();
-                new DownloadXML().execute(enlaces);
+
+                    if(isOnline(getApplicationContext() )){
+                    new DownloadXML().execute(enlaces);
+                    }else{
+                        pDialog.hide();
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage("Importante")
+                                .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
+                        builder.create();
+                        builder.show();
+                    }
+                }catch (Exception e){
+                Log.e("Error en comprobar conexion",e.getLocalizedMessage());
+                e.printStackTrace();
+
+                }
             }
 
 
@@ -170,26 +192,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout pestañas=(TabLayout) findViewById(R.id.tabs);
+
+        TabLayout pestanas=findViewById(R.id.tabs);
 
 
-        pestañas.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        pestanas.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
+            @Nullable
             public void onTabSelected(TabLayout.Tab tab) {
-
-                // Toast.makeText(MainActivity.this,"Seleccionado: "+tab.getText(),Toast.LENGTH_SHORT).show();
-
-                if(tab.getText().equals("HOY")){
-                    Toast.makeText(MainActivity.this,"Seleccionado hoy",Toast.LENGTH_SHORT).show();
-                    new DownloadXML().execute(URL2+idZona+"&dia=0");
-                }
-                if(tab.getText().equals("MAÑANA")){
-                    Toast.makeText(MainActivity.this,"Seleccionado mañana",Toast.LENGTH_SHORT).show();
-                    new DownloadXML().execute(URL2+idZona+"&dia=1");
-                }
-                if(tab.getText().equals("PASADO")){
-                    Toast.makeText(MainActivity.this,"Seleccionado pasado",Toast.LENGTH_SHORT).show();
-                    new DownloadXML().execute(URL2+idZona+"&dia=2");
+                try {
+                    // Toast.makeText(MainActivity.this,"Seleccionado: "+tab.getText(),Toast.LENGTH_SHORT).show();
+                    if (tab.getText().equals("HOY")) {
+                        Toast.makeText(MainActivity.this, "Seleccionado hoy", Toast.LENGTH_SHORT).show();
+                        new DownloadXML().execute(URL2 + idZona + "&dia=0");
+                    }
+                    if (tab.getText().equals("MAÑANA")) {
+                        Toast.makeText(MainActivity.this, "Seleccionado mañana", Toast.LENGTH_SHORT).show();
+                        new DownloadXML().execute(URL2 + idZona + "&dia=1");
+                    }
+                    if (tab.getText().equals("PASADO")) {
+                        Toast.makeText(MainActivity.this, "Seleccionado pasado", Toast.LENGTH_SHORT).show();
+                        new DownloadXML().execute(URL2 + idZona + "&dia=2");
+                    }
+                }catch (Exception e){
+                    Log.e("Error en OnTabSelected ",e.getLocalizedMessage());
+                    e.printStackTrace();
                 }
 
             }
@@ -227,16 +254,28 @@ public class MainActivity extends AppCompatActivity {
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db =dbf.newDocumentBuilder();
                 //Descargamos el XML
-                Document doc =db.parse(new InputSource(url.openStream()));
+                Document doc = db.parse(new InputSource(url.openStream()));
                 doc.getDocumentElement().normalize();
                 //Localizar el Nombre del TAG
                 nodelist=doc.getElementsByTagName("item");
 
             }catch (Exception e){
-                Log.e("Error",e.getMessage());
+                MainActivity.this.pDialog.hide();
+                Log.e("Error en el doInBackground",e.getMessage());
                 e.printStackTrace();
-            }
-            return null;
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setMessage("Importante")
+//                        .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
+//                builder.create().show();
+               // builder.show();
+              //  onPause();
+            }  return null;
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
 
         @Override
@@ -344,13 +383,21 @@ public class MainActivity extends AppCompatActivity {
             }
             // pDialog.dismiss();
         }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setMessage("Importante")
+                    .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
+            builder.create().show();
+        }
     }
 
     private InputStream openHttpConnection(String url) throws IOException {
         InputStream is = null;
         int responseCode;
 
-        URLConnection connection = null;
+        URLConnection connection;
         connection = (new URL(url)).openConnection();
 
         if(!(connection instanceof HttpURLConnection)) {
@@ -373,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap downloadImage(String url) {
         Bitmap bitmap = null;
-        InputStream is = null;
+        InputStream is;
 
         try {
             is = openHttpConnection(url);
@@ -502,4 +549,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    private static ConnectivityManager manager;
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
+
 }
+
