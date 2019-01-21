@@ -165,14 +165,13 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.setIndeterminate(false);
                 pDialog.show();
 
-                    if(isOnline(getApplicationContext() )){
+                    if(!isOnline(getApplicationContext() )){
                     new DownloadXML().execute(enlaces);
                     }else{
                         pDialog.hide();
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setMessage("Importante")
-                                .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias");
+                        builder.setMessage("Conectese a una red de datos para poder utilizar la aplicacion.")
+                                .setTitle("Error");
                         builder.create();
                         builder.show();
                     }
