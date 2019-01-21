@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                             if (!isOnline(getApplicationContext())) {
                                 new DownloadXML().execute(enlaces);
                             } else {
-                                pDialog.hide();
+                               // pDialog.hide();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setMessage("Conectese a una red de datos para poder utilizar la aplicacion.")
                                         .setTitle("Error")
