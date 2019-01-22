@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +39,7 @@ import java.net.URLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Spinner spinnerProvincias;
     private Spinner spinnerLocalidades;
@@ -95,13 +96,14 @@ public class MainActivity extends AppCompatActivity {
             "Sobrado", "As Somozas", "Teo", "Toques", "Tordoia", "Touro", "Trazo", "Valdoviño", "Val do Dubra", "Vedra",
             "Vilasantar", "Vilarmaior", "Vimianzo", "Zas"};
 
-
-
+    private SwipeRefreshLayout swipeContainer;
+    String enlaceFin="";
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        swipeContainer = findViewById(R.id.swiperefresh);
+        swipeContainer.setOnRefreshListener(this);
 
         //Creamos los dos Spinner de Provincias y Localidades
         spinnerProvincias =  findViewById(R.id.provincia);
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 idZona=idProv+String.format("%02d",position+1);
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
-
+                enlaceFin=enlaces;
 
                         try {
                             if (!isOnline(getApplicationContext())) {
@@ -242,8 +244,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onRefresh() {
+       // Intent intent = getIntent();
+       // finish();
+       // startActivity(intent);
+        new DownloadXML().execute(enlaceFin);
+        swipeContainer.setRefreshing(false);
+    }
+
 
     private class DownloadXML extends AsyncTask<String,Void,Void>{
+
 
         @Override
         protected void onPreExecute() {
@@ -514,6 +531,7 @@ public class MainActivity extends AppCompatActivity {
             imgView = findViewById(R.id.imgNV);
             imgView.setImageBitmap(bitmap);
             pDialog.setVisibility(View.INVISIBLE);
+           // swipeContainer.setRefreshing(false);
         }
     }
 
@@ -527,6 +545,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgMV);
+          //  swipeContainer.setRefreshing(false);
             imgView.setImageBitmap(bitmap);
 
         }
@@ -537,7 +556,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... strings) {
             pDialog.setVisibility(View.INVISIBLE);
+            //swipeContainer.setRefreshing(false);
             return downloadImage(strings[0]);
+
         }
 
         @Override
@@ -545,6 +566,7 @@ public class MainActivity extends AppCompatActivity {
             imgView = findViewById(R.id.imgTV);
             imgView.setImageBitmap(bitmap);
             pDialog.setVisibility(View.INVISIBLE);
+            //swipeContainer.setRefreshing(false);
         }
     }
 
