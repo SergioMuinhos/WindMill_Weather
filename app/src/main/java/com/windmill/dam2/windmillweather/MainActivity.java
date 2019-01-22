@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private Spinner spinnerLocalidades;
     public String idZona = "";
     public int idProv = 0;
+    public String idTab="";
     TextView textview;
     ProgressBar pDialog;
     NodeList nodelist;
@@ -217,18 +218,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         Toast.makeText(MainActivity.this, "Seleccionado hoy", Toast.LENGTH_SHORT).show();
                        // new DownloadXML().execute(URL2 + idZona + "&dia=0");
                         enlaceFin=URL2 + idZona + "&dia=0";
+                        idTab="&dia=0";
                     }
                     if (tab.getText().equals("MAÑANA")) {
                         Toast.makeText(MainActivity.this, "Seleccionado mañana", Toast.LENGTH_SHORT).show();
                        // new DownloadXML().execute(URL2 + idZona + "&dia=1");
                         enlaceFin=URL2 + idZona + "&dia=1";
+                        idTab="&dia=1";
                     }
                     if (tab.getText().equals("PASADO")) {
                         Toast.makeText(MainActivity.this, "Seleccionado pasado", Toast.LENGTH_SHORT).show();
                        // new DownloadXML().execute(URL2 + idZona + "&dia=2");
                         enlaceFin=URL2 + idZona + "&dia=2";
+                        idTab="&dia=2";
                     }
-
+                    enlaceFin=URL2 + idZona + idTab;
                     new DownloadXML().execute(enlaceFin);
                 }catch (Exception e){
                     Log.e("Error en OnTabSelected ",e.getLocalizedMessage());
@@ -261,7 +265,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
        // Intent intent = getIntent();
        // finish();
        // startActivity(intent);
-        new DownloadXML().execute(enlaceFin);
+        new DownloadXML().execute(URL2 + idZona + idTab);
+
          Handler hdl=new Handler();
          hdl.postDelayed(new Runnable() {
              @Override
