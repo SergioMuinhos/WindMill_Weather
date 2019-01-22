@@ -13,9 +13,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -100,22 +102,38 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private SwipeRefreshLayout swipeContainer;
     String enlaceFin="";
+    private NestedScrollView nest;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Layouts
         swipeContainer = findViewById(R.id.swiperefresh);
         swipeContainer.setOnRefreshListener(this);
+        nest = findViewById(R.id.nested);
 
         //Creamos los dos Spinner de Provincias y Localidades
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
        pDialog =findViewById(R.id.pBar);
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
-
+        nest= findViewById(R.id.nested);
         spinnerProvincias.setAdapter(adapterProv);
-
+//        nest.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int x = (int) event.getRawX();
+//                int y = (int) nest.getScrollY();
+//                Log.e("X: "+x+" Y: "+y+" MaxScroll: "+nest.getMaxScrollAmount()+"  Dato: "+nest.onNestedS,event.toString());
+//                 if(event.getAction()==MotionEvent.ACTION_MOVE){
+//                    swipeContainer.setEnabled(true);
+//                }
+//                swipeContainer.setEnabled(false);
+//                return false;
+//            }
+//        });
+      //nest.onStopNestedScroll();
         spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -278,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     }
+
 
 
     private class DownloadXML extends AsyncTask<String,Void,Void>{
