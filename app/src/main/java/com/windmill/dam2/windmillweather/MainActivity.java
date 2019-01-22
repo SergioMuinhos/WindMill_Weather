@@ -278,33 +278,33 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void args) {
 
-
-            for(int i=0;i<nodelist.getLength();i++){
-                Node nNode= nodelist.item(i);
-                NodeList datos=nNode.getChildNodes();
+        try {
+            for (int i = 0; i < nodelist.getLength(); i++) {
+                Node nNode = nodelist.item(i);
+                NodeList datos = nNode.getChildNodes();
                 for (int j = 0; j < datos.getLength(); j++) {
-                    Node dato=datos.item(j);
-                    String etiq=dato.getNodeName();
+                    Node dato = datos.item(j);
+                    String etiq = dato.getNodeName();
 
                     //Nombre del Concello
-                    if(etiq.equals("Concellos:nomeConcello")){
-                        textview=  findViewById(R.id.cityText);
+                    if (etiq.equals("Concellos:nomeConcello")) {
+                        textview = findViewById(R.id.cityText);
                         textview.setText(dato.getFirstChild().getNodeValue().toUpperCase());
                     }
                     //Temperatura Maxima
                     //TEXTO
-                    if(etiq.equals("Concellos:tMax")){
-                        textview= findViewById(R.id.tempTextMax);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
+                    if (etiq.equals("Concellos:tMax")) {
+                        textview = findViewById(R.id.tempTextMax);
+                        textview.setText(dato.getFirstChild().getNodeValue() + "ºC");
                         //IMAGEN
                         new cargarImagenTempMax().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
                     }
 
                     //Temperatura Minima
                     //TEXTO
-                    if(etiq.equals("Concellos:tMin")){
-                        textview= findViewById(R.id.tempTextMin);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
+                    if (etiq.equals("Concellos:tMin")) {
+                        textview = findViewById(R.id.tempTextMin);
+                        textview.setText(dato.getFirstChild().getNodeValue() + "ºC");
                         //IMAGEN
                         new cargarImagenTempMin().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
                     }
@@ -312,67 +312,71 @@ public class MainActivity extends AppCompatActivity {
                     //MAÑANA
                     //Cielo
 
-                    if(etiq.equals("Concellos:ceoM")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloM().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                    if (etiq.equals("Concellos:ceoM")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenCieloM().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + img + ".png");
                     }
                     //Viento
-                    if(etiq.equals("Concellos:ventoM")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoM().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                    if (etiq.equals("Concellos:ventoM")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenVientoM().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/" + img + ".png");
                     }
 
                     //Lluvia
-                    if(etiq.equals("Concellos:pChoivaM")){
-                        textview= findViewById(R.id.textML);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
+                    if (etiq.equals("Concellos:pChoivaM")) {
+                        textview = findViewById(R.id.textML);
+                        textview.setText(dato.getFirstChild().getNodeValue() + "%");
                     }
 
                     //TARDE
                     //Cielo
-                    if(etiq.equals("Concellos:ceoT")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloT().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                    if (etiq.equals("Concellos:ceoT")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenCieloT().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + img + ".png");
                     }
                     //Viento
-                    if(etiq.equals("Concellos:ventoT")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoT().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                    if (etiq.equals("Concellos:ventoT")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenVientoT().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/" + img + ".png");
                     }
 
                     //Lluvia
-                    if(etiq.equals("Concellos:pChoivaT")){
-                        textview= findViewById(R.id.textTL);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
+                    if (etiq.equals("Concellos:pChoivaT")) {
+                        textview = findViewById(R.id.textTL);
+                        textview.setText(dato.getFirstChild().getNodeValue() + "%");
                     }
 
                     //NOCHE
                     //Cielo
-                    if(etiq.equals("Concellos:ceoN")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloN().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                    if (etiq.equals("Concellos:ceoN")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenCieloN().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + img + ".png");
                     }
                     //Viento
-                    if(etiq.equals("Concellos:ventoN")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoN().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                    if (etiq.equals("Concellos:ventoN")) {
+                        String img = dato.getFirstChild().getNodeValue();
+                        new cargarImagenVientoN().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/" + img + ".png");
                     }
 
                     //Lluvia
-                    if(etiq.equals("Concellos:pChoivaN")){
-                        textview= findViewById(R.id.textNL);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
+                    if (etiq.equals("Concellos:pChoivaN")) {
+                        textview = findViewById(R.id.textNL);
+                        textview.setText(dato.getFirstChild().getNodeValue() + "%");
                     }
 
                     //ULTIMA ACTUALIZACION
 
-                    if(etiq.equals("Concellos:dataCreacion")){
-                        textview= findViewById(R.id.txtActualizacion);
-                        textview.setText("Última Actualización: "+dato.getFirstChild().getNodeValue().substring(0,10));
+                    if (etiq.equals("Concellos:dataCreacion")) {
+                        textview = findViewById(R.id.txtActualizacion);
+                        textview.setText("Última Actualización: " + dato.getFirstChild().getNodeValue().substring(0, 10));
                     }
 
                 }
             }
+        }catch (Exception e){
+            Log.e("Error en el Array",e.getLocalizedMessage());
+            e.printStackTrace();
+        }
 
         }
 
