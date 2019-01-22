@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -42,7 +43,7 @@ import java.net.URLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,AppBarLayout.OnOffsetChangedListener {
 
     private Spinner spinnerProvincias;
     private Spinner spinnerLocalidades;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout swipeContainer;
     String enlaceFin="";
     private NestedScrollView nest;
+    AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -113,27 +115,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeContainer.setOnRefreshListener(this);
         nest = findViewById(R.id.nested);
 
+
         //Creamos los dos Spinner de Provincias y Localidades
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
        pDialog =findViewById(R.id.pBar);
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
-        nest= findViewById(R.id.nested);
         spinnerProvincias.setAdapter(adapterProv);
-//        nest.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                int x = (int) event.getRawX();
-//                int y = (int) nest.getScrollY();
-//                Log.e("X: "+x+" Y: "+y+" MaxScroll: "+nest.getMaxScrollAmount()+"  Dato: "+nest.onNestedS,event.toString());
-//                 if(event.getAction()==MotionEvent.ACTION_MOVE){
-//                    swipeContainer.setEnabled(true);
-//                }
-//                swipeContainer.setEnabled(false);
-//                return false;
-//            }
-//        });
-      //nest.onStopNestedScroll();
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeContainer.setRefreshing(false);
+            }
+        });
+        appBarLayout=findViewById(R.id.appbar);
+
         spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -273,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -297,7 +294,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            swipeContainer.setEnabled(true);
+        } else {
+            swipeContainer.setEnabled(false);
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appBarLayout.removeOnOffsetChangedListener(this);
+    }
 
     private class DownloadXML extends AsyncTask<String,Void,Void>{
 
