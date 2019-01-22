@@ -43,9 +43,6 @@ dependencies {
     //Agregamos las librerias paara el SwipeRefreshLayout
      fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
-
-
-    // Add this line to compile in our project support-v4
     implementation 'com.android.support:support-v4:28.0.0'
 
 }

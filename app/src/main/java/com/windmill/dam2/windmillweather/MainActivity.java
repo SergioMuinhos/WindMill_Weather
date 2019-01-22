@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private SwipeRefreshLayout swipeContainer;
     String enlaceFin="";
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 idZona=idProv+String.format("%02d",position+1);
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
-                enlaceFin=enlaces;
+               // enlaceFin=enlaces;
 
                         try {
                             if (!isOnline(getApplicationContext())) {
@@ -213,16 +215,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     // Toast.makeText(MainActivity.this,"Seleccionado: "+tab.getText(),Toast.LENGTH_SHORT).show();
                     if (tab.getText().equals("HOY")) {
                         Toast.makeText(MainActivity.this, "Seleccionado hoy", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=0");
+                       // new DownloadXML().execute(URL2 + idZona + "&dia=0");
+                        enlaceFin=URL2 + idZona + "&dia=0";
                     }
                     if (tab.getText().equals("MAÑANA")) {
                         Toast.makeText(MainActivity.this, "Seleccionado mañana", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=1");
+                       // new DownloadXML().execute(URL2 + idZona + "&dia=1");
+                        enlaceFin=URL2 + idZona + "&dia=1";
                     }
                     if (tab.getText().equals("PASADO")) {
                         Toast.makeText(MainActivity.this, "Seleccionado pasado", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=2");
+                       // new DownloadXML().execute(URL2 + idZona + "&dia=2");
+                        enlaceFin=URL2 + idZona + "&dia=2";
                     }
+
+                    new DownloadXML().execute(enlaceFin);
                 }catch (Exception e){
                     Log.e("Error en OnTabSelected ",e.getLocalizedMessage());
                     e.printStackTrace();
@@ -255,7 +262,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
        // finish();
        // startActivity(intent);
         new DownloadXML().execute(enlaceFin);
-        swipeContainer.setRefreshing(false);
+         Handler hdl=new Handler();
+         hdl.postDelayed(new Runnable() {
+             @Override
+             public void run() {
+
+                 swipeContainer.setRefreshing(false);
+             }
+         },2000);
+
+
     }
 
 
