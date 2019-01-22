@@ -161,10 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
 
-                   // pDialog.setVisibility(View.INVISIBLE);
-                    //pDialog.setMessage("Cargando...");
-                    //pDialog.setIndeterminate(false);
-                  //  pDialog.setVisibility(View.INVISIBLE);
+
                         try {
                             if (!isOnline(getApplicationContext())) {
 
