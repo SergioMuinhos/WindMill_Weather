@@ -40,6 +40,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AlmacenPreferencias almacen;
     private Spinner spinnerProvincias;
     private Spinner spinnerLocalidades;
     public String idZona = "";
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        almacen=new AlmacenPreferencias(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
