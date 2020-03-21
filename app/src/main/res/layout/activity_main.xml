@@ -67,7 +67,7 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="705dp"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
         <android.support.constraint.ConstraintLayout
@@ -105,17 +105,18 @@
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/cityText" />
+
             <ImageView
                 android:id="@+id/imgTempMax"
                 android:layout_width="53dp"
                 android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_alignTop="@+id/tempTextMax"
-                android:layout_marginBottom="32dp"
-                android:layout_marginEnd="8dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintEnd_toStartOf="@+id/tempTextMax"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -129,9 +130,9 @@
                 android:layout_height="52dp"
                 android:layout_below="@+id/cityText"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
                 android:text="0.0ºC"
                 android:textColor="#ff1ba1ee"
                 android:textSize="42sp"
@@ -148,8 +149,8 @@
                 android:layout_height="52dp"
                 android:layout_below="@+id/cityText"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginBottom="16dp"
                 android:text="0.0ºC"
                 android:textColor="#ff1ba1ee"
                 android:textSize="42sp"
@@ -162,13 +163,13 @@
                 android:id="@+id/imgTempMin"
                 android:layout_width="53dp"
                 android:layout_height="50dp"
+                android:layout_alignTop="@+id/imgTempMax"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/imgTempMax"
-                android:layout_marginBottom="32dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.114"
@@ -195,9 +196,8 @@
                 android:id="@+id/txtActualizacion"
                 android:layout_width="wrap_content"
                 android:layout_height="23dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginEnd="8dp"
                 android:text="Ultima actualizacion: 12/12/2017 00:00"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalIzq"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -206,12 +206,12 @@
 
             <TableLayout
                 android:id="@+id/tableLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="232dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="289dp"
+                android:layout_height="266dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -234,35 +234,35 @@
                         tools:layout_editor_absoluteY="250dp" />
 
                     <TextView
-                        android:id="@+id/textCielo"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
+                        android:id="@+id/textM"
+                        android:layout_width="79dp"
+                        android:layout_height="65dp"
                         android:paddingTop="10dp"
-                        android:text="Cielo"
-                        android:textAlignment="center"
-                        android:textSize="22sp"
+                        android:text="Mañana"
+                        android:textAlignment="textStart"
+                        android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
 
                     <TextView
-                        android:id="@+id/textViento"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:paddingTop="10dp"
-                        android:text="Viento"
-                        android:textAlignment="center"
-                        android:textSize="22sp"
-                        tools:layout_editor_absoluteX="28dp"
-                        tools:layout_editor_absoluteY="250dp" />
-
-                    <TextView
-                        android:id="@+id/textlluvia"
+                        android:id="@+id/textT"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingTop="0dp"
-                        android:text="Probabilidad \n de Lluvia"
-                        android:textAlignment="center"
-                        android:textSize="15sp"
+                        android:layout_height="65dp"
+                        android:paddingTop="10dp"
+                        android:text="Tarde"
+                        android:textAlignment="textStart"
+                        android:textStyle="bold"
+                        tools:layout_editor_absoluteX="28dp"
+                        tools:layout_editor_absoluteY="250dp" />
+
+                    <TextView
+                        android:id="@+id/textN"
+                        android:layout_width="wrap_content"
+                        android:layout_height="65dp"
+                        android:paddingTop="10dp"
+                        android:text="Noche"
+                        android:textAlignment="textStart"
+                        android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
 
@@ -275,12 +275,13 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/textM"
-                        android:layout_width="79dp"
-                        android:layout_height="65dp"
+                        android:id="@+id/textCielo"
+                        android:layout_width="70dp"
+                        android:layout_height="40dp"
                         android:paddingTop="10dp"
-                        android:text="Mañana"
-                        android:textAlignment="textStart"
+                        android:text="Cielo"
+                        android:textAlignment="center"
+                        android:textSize="22sp"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
 
@@ -293,24 +294,20 @@
                         tools:layout_editor_absoluteY="477dp" />
 
                     <ImageView
-                        android:id="@+id/imgMV"
+                        android:id="@+id/imgTC"
                         android:layout_width="match_parent"
                         android:layout_height="65dp"
                         app:srcCompat="@android:color/background_light"
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
 
-                    <TextView
-                        android:id="@+id/textML"
-                        android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/imgNC"
+                        android:layout_width="65dp"
                         android:layout_height="65dp"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:paddingTop="15dp"
-                        android:text="00%"
-                        android:textAlignment="center"
-                        tools:layout_editor_absoluteX="28dp"
-                        tools:layout_editor_absoluteY="250dp" />
+                        app:srcCompat="@android:color/background_light"
+                        tools:layout_editor_absoluteX="90dp"
+                        tools:layout_editor_absoluteY="477dp" />
 
                 </TableRow>
 
@@ -321,17 +318,18 @@
 
 
                     <TextView
-                        android:id="@+id/textT"
-                        android:layout_width="wrap_content"
-                        android:layout_height="65dp"
+                        android:id="@+id/textViento"
+                        android:layout_width="70dp"
+                        android:layout_height="40dp"
                         android:paddingTop="10dp"
-                        android:text="Tarde"
-                        android:textAlignment="textStart"
+                        android:text="Viento"
+                        android:textAlignment="center"
+                        android:textSize="22sp"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
 
                     <ImageView
-                        android:id="@+id/imgTC"
+                        android:id="@+id/imgMV"
                         android:layout_width="match_parent"
                         android:layout_height="65dp"
                         app:srcCompat="@android:color/background_light"
@@ -346,44 +344,6 @@
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
 
-                    <TextView
-                        android:id="@+id/textTL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="65dp"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:paddingTop="15dp"
-                        android:text="00%"
-                        android:textAlignment="center"
-                        tools:layout_editor_absoluteX="28dp"
-                        tools:layout_editor_absoluteY="250dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/row4"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp">
-
-
-                    <TextView
-                        android:id="@+id/textN"
-                        android:layout_width="wrap_content"
-                        android:layout_height="65dp"
-                        android:paddingTop="10dp"
-                        android:text="Noche"
-                        android:textAlignment="textStart"
-                        tools:layout_editor_absoluteX="28dp"
-                        tools:layout_editor_absoluteY="250dp" />
-
-                    <ImageView
-                        android:id="@+id/imgNC"
-                        android:layout_width="65dp"
-                        android:layout_height="65dp"
-                        app:srcCompat="@android:color/background_light"
-                        tools:layout_editor_absoluteX="90dp"
-                        tools:layout_editor_absoluteY="477dp" />
-
                     <ImageView
                         android:id="@+id/imgNV"
                         android:layout_width="65dp"
@@ -392,15 +352,58 @@
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
 
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row4"
+                    android:layout_width="293dp"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:id="@+id/textlluvia"
+                        android:layout_width="77dp"
+                        android:layout_height="53dp"
+                        android:paddingTop="0dp"
+                        android:text="Probabilidad \n de Lluvia"
+                        android:textAlignment="center"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="28dp"
+                        tools:layout_editor_absoluteY="250dp" />
+
+                    <TextView
+                        android:id="@+id/textML"
+                        android:layout_width="wrap_content"
+                        android:layout_height="65dp"
+                        android:paddingTop="15dp"
+                        android:text="00%"
+                        android:textAlignment="center"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:layout_editor_absoluteX="28dp"
+                        tools:layout_editor_absoluteY="250dp" />
+
+                    <TextView
+                        android:id="@+id/textTL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="65dp"
+                        android:paddingTop="15dp"
+                        android:text="00%"
+                        android:textAlignment="center"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:layout_editor_absoluteX="28dp"
+                        tools:layout_editor_absoluteY="250dp" />
+
                     <TextView
                         android:id="@+id/textNL"
                         android:layout_width="wrap_content"
                         android:layout_height="65dp"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
                         android:paddingTop="15dp"
                         android:text="00%"
                         android:textAlignment="center"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
 

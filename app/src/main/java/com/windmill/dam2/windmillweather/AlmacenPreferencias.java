@@ -10,10 +10,17 @@ public class AlmacenPreferencias {
         this.context=context;
     }
 
-    public void guardarPreferencias(String provincia, String localidad){
+    public void guardarProvincia(String provincia){
+
         SharedPreferences preferencias =context.getSharedPreferences(PREFERECNIAS,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferencias.edit();
         editor.putString("provincia",provincia);
+
+        editor.apply();
+    }
+    public void guardarLocalidad(String localidad){
+        SharedPreferences preferencias =context.getSharedPreferences(PREFERECNIAS,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferencias.edit();
         editor.putString("localidad",localidad);
         editor.apply();
     }

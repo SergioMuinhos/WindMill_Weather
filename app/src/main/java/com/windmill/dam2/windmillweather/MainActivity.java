@@ -106,9 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Creamos los dos Spinner de Provincias y Localidades
+        //Obtenermos la referencias de los dos Spinner de Provincias y Localidades y Tabs(Homa, Mañana Pasado)
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
-       pDialog =findViewById(R.id.pBar);
+        pDialog =findViewById(R.id.pBar);
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
 
         spinnerProvincias.setAdapter(adapterProv);
