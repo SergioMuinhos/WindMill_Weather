@@ -362,11 +362,11 @@
 
                     <TextView
                         android:id="@+id/textlluvia"
-                        android:layout_width="77dp"
-                        android:layout_height="53dp"
+                        android:layout_width="88dp"
+                        android:layout_height="match_parent"
                         android:paddingTop="0dp"
-                        android:text="Probabilidad \n de Lluvia"
-                        android:textAlignment="center"
+                        android:text="\n Probabilidad \n  de Lluvia"
+                        android:textAlignment="inherit"
                         android:textSize="15sp"
                         tools:layout_editor_absoluteX="28dp"
                         tools:layout_editor_absoluteY="250dp" />
@@ -377,7 +377,7 @@
                         android:layout_height="65dp"
                         android:paddingTop="15dp"
                         android:text="00%"
-                        android:textAlignment="center"
+                        android:textAlignment="textStart"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"
