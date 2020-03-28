@@ -24,7 +24,7 @@ public class SplashScreen extends Activity {
         gifImageView= findViewById(R.id.splashGIF);
 //Metemos el GiF en el SplashScreen
         try{
-            InputStream inputStream= getAssets().open("weather.gif");
+            InputStream inputStream= getAssets().open("splash2.gif");
             byte[] bytes = IOUtils.toByteArray(inputStream);
             gifImageView.setBytes(bytes);
             gifImageView.startAnimation();

@@ -377,7 +377,7 @@
                         android:layout_height="65dp"
                         android:paddingTop="15dp"
                         android:text="00%"
-                        android:textAlignment="center"
+                        android:textAlignment="textStart"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"
