@@ -19,6 +19,8 @@
                 android:id="@+id/provincia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="Provincia"
+                android:minHeight="48dp"
                 android:spinnerMode="dialog">
 
             </Spinner>
@@ -33,6 +35,8 @@
                 android:id="@+id/localidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="Localidad"
+                android:minHeight="48dp"
                 android:spinnerMode="dialog">
 
             </Spinner>
@@ -114,15 +118,14 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintEnd_toStartOf="@+id/tempTextMax"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.8"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cityText"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/tempTextMax"
@@ -132,15 +135,17 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:text="0.0ºC"
                 android:textColor="#ff1ba1ee"
                 android:textSize="42sp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.268"
+                app:layout_constraintHorizontal_bias="0.291"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
                 tools:ignore="MissingConstraints" />
 
             <TextView
@@ -149,14 +154,16 @@
                 android:layout_height="52dp"
                 android:layout_below="@+id/cityText"
                 android:layout_centerHorizontal="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="32dp"
                 android:text="0.0ºC"
                 android:textColor="#ff1ba1ee"
                 android:textSize="42sp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintStart_toEndOf="@+id/imgTempMin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
                 tools:ignore="MissingConstraints" />
 
             <ImageView
@@ -167,15 +174,14 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalArriba"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.114"
+                app:layout_constraintHorizontal_bias="0.121"
                 app:layout_constraintStart_toEndOf="@+id/tempTextMax"
-                app:layout_constraintTop_toBottomOf="@+id/cityText"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guidelineHorizontalArriba"
@@ -189,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="182dp" />
+                app:layout_constraintGuide_end="229dp" />
 
 
             <TextView
@@ -332,6 +338,7 @@
                         android:id="@+id/imgMV"
                         android:layout_width="match_parent"
                         android:layout_height="65dp"
+                        android:background="#CDCDCDCD"
                         app:srcCompat="@android:color/background_light"
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
@@ -340,6 +347,7 @@
                         android:id="@+id/imgTV"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
+                        android:background="#CDCDCDCD"
                         app:srcCompat="@android:color/background_light"
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
@@ -348,6 +356,7 @@
                         android:id="@+id/imgNV"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
+                        android:background="#CDCDCDCD"
                         app:srcCompat="@android:color/background_light"
                         tools:layout_editor_absoluteX="90dp"
                         tools:layout_editor_absoluteY="477dp" />
@@ -377,7 +386,7 @@
                         android:layout_height="65dp"
                         android:paddingTop="15dp"
                         android:text="00%"
-                        android:textAlignment="textStart"
+                        android:textAlignment="center"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="28dp"

@@ -1,9 +1,12 @@
 package com.windmill.dam2.windmillweather;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -40,7 +43,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AlmacenPreferencias almacen;
+    private SharedPreferences sharedPreferences;
     private Spinner spinnerProvincias;
     private Spinner spinnerLocalidades;
     public String idZona = "";
@@ -48,10 +51,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     ProgressBar pDialog;
     NodeList nodelist;
-    ImageView imgView;
+    static ImageView imgView;
     TabItem hoy,manana,pasado;
-    public String URL="http://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=36001&dia=1";
-    public String URL2="http://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=";
+
+    public String URL="https://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=36001&dia=1";
+    public String URL2="https://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=";
     String[] provincias = new String[]{"Pontevedra", "Lugo", "Ourense", "A Coruña"};
     public String[] pontevedra = new String[]{"Arbo", "Barro", "Baiona", "Bueu", "Caldas de Reis",
             "Cambados", "Campo Lameiro", "Cangas", "A Cañiza", "Catoira", "Cerdedo", "Cotobade",
@@ -100,7 +104,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        almacen=new AlmacenPreferencias(this);
+        sharedPreferences= getSharedPreferences("preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int selectedProvincias = sharedPreferences.getInt("provincias", 0);// 0 es la posición por defecto
+        int selectedLocalidades = sharedPreferences.getInt("localidades", 0); // 0 es la posición por defecto
+
+        //almacen=new AlmacenPreferencias(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -143,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                         adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, coruna);
                         break;
                 }
-
+                sharedPreferences.getInt("idProv", idProv);
                 spinnerLocalidades.setAdapter(adapterLoc );
 
 
@@ -164,10 +173,6 @@ public class MainActivity extends AppCompatActivity {
                 // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
                 String enlaces=URL2+idZona+"&dia=0";
 
-                   // pDialog.setVisibility(View.INVISIBLE);
-                    //pDialog.setMessage("Cargando...");
-                    //pDialog.setIndeterminate(false);
-                  //  pDialog.setVisibility(View.INVISIBLE);
                         try {
                             if (!isOnline(getApplicationContext())) {
 
@@ -303,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                         textview= findViewById(R.id.tempTextMax);
                         textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
                         //IMAGEN
-                        new cargarImagenTempMax().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
+                        new cargarImagenTempMax().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
                     }
 
                     //Temperatura Minima
@@ -312,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
                         textview= findViewById(R.id.tempTextMin);
                         textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
                         //IMAGEN
-                        new cargarImagenTempMin().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
+                        new cargarImagenTempMin().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
                     }
 
                     //MAÑANA
@@ -320,12 +325,12 @@ public class MainActivity extends AppCompatActivity {
 
                     if(etiq.equals("Concellos:ceoM")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloM().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                        new cargarImagenCieloM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
                     }
                     //Viento
                     if(etiq.equals("Concellos:ventoM")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoM().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                        new cargarImagenVientoM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
                     }
 
                     //Lluvia
@@ -338,12 +343,12 @@ public class MainActivity extends AppCompatActivity {
                     //Cielo
                     if(etiq.equals("Concellos:ceoT")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloT().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                        new cargarImagenCieloT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
                     }
                     //Viento
                     if(etiq.equals("Concellos:ventoT")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoT().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                        new cargarImagenVientoT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
                     }
 
                     //Lluvia
@@ -356,12 +361,12 @@ public class MainActivity extends AppCompatActivity {
                     //Cielo
                     if(etiq.equals("Concellos:ceoN")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloN().execute("http://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
+                        new cargarImagenCieloN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
                     }
                     //Viento
                     if(etiq.equals("Concellos:ventoN")){
                         String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoN().execute("http://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/combo/"+img+".png");
+                        new cargarImagenVientoN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
                     }
 
                     //Lluvia
@@ -487,7 +492,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgTempMin);
             imgView.setImageBitmap(bitmap);
-            // pDialog.dismiss();
         }
     }
     private class cargarImagenTempMax extends AsyncTask<String, Void, Bitmap> {
@@ -501,7 +505,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgTempMax);
             imgView.setImageBitmap(bitmap);
-            // pDialog.dismiss();
         }
     }
     private class cargarImagenVientoN extends AsyncTask<String, Void, Bitmap> {
