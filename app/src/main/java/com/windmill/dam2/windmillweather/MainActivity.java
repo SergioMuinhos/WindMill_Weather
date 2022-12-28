@@ -1,6 +1,5 @@
 package com.windmill.dam2.windmillweather;
 
-import static android.app.PendingIntent.getActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
