@@ -1,12 +1,9 @@
 package com.windmill.dam2.windmillweather;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Debug;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.LogPrinter;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -15,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SplashScreen extends Activity {
+public class SplashScreen extends AppCompatActivity {
  GifImageView gifImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,11 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        
+        <item name="android:windowBackground">@color/weather_background</item>
+        <item name="android:colorBackground">@color/weather_background</item>
+        <item name="colorSurface">@color/weather_surface</item>
+        <item name="colorSurfaceVariant">@color/weather_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        
+        <!-- styling for Material components -->
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
     </style>
 
 </resources>

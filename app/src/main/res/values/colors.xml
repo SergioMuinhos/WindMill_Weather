@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0077c2</color>
-    <color name="colorPrimaryDark">#42a5f5</color>
-    <color name="colorAccent">#80d6ff</color>
+    <!-- Paleta de colores estilo Material 3 para clima -->
+    <color name="colorPrimary">#0288D1</color>
+    <color name="colorPrimaryDark">#01579B</color>
+    <color name="colorAccent">#00B0FF</color>
+    
+    <color name="weather_primary">#0288D1</color>
+    <color name="weather_primary_container">#E1F5FE</color>
+    <color name="weather_secondary">#4FC3F7</color>
+    
+    <!-- Fondos y Superficies -->
+    <color name="weather_background">#F4F6F9</color>
+    <color name="weather_surface">#FFFFFF</color>
+    <color name="weather_outline">#E0E4EB</color>
+    
+    <!-- Textos -->
+    <color name="text_primary">#1C2D42</color>
+    <color name="text_secondary">#607289</color>
+    <color name="text_accent">#0288D1</color>
+    <color name="tab_text_unselected">#B3E5FC</color>
 </resources>

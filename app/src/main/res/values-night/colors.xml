@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta de colores estilo Material 3 para clima - Modo Oscuro -->
+    <color name="colorPrimary">#1E1E1E</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorAccent">#4FC3F7</color>
+    
+    <color name="weather_primary">#0288D1</color>
+    <color name="weather_primary_container">#1A237E</color>
+    <color name="weather_secondary">#4FC3F7</color>
+    
+    <!-- Fondos y Superficies -->
+    <color name="weather_background">#121212</color>
+    <color name="weather_surface">#1E1E1E</color>
+    <color name="weather_outline">#2C2C2C</color>
+    
+    <!-- Textos -->
+    <color name="text_primary">#E1F5FE</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_accent">#4FC3F7</color>
+    <color name="tab_text_unselected">#B0BEC5</color>
+</resources>

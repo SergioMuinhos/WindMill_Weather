@@ -12,9 +12,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import android.view.MenuItem;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,19 +29,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
+import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
     public int idProv = 0;
     TextView textview;
     ProgressBar pDialog;
-    NodeList nodelist;
     static ImageView imgView;
     TabItem hoy,manana,pasado;
+    private boolean isInitialLoad = true;
+    private PredConcello currentPredConcello;
+    private int currentTabPosition = 0;
 
-    public String URL="https://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=36001&dia=1";
-    public String URL2="https://servizos.meteogalicia.es/rss/predicion/rssLocalidades.action?idZona=";
+    public String URL2="https://servizos.meteogalicia.gal/mgrss/predicion/jsonPredConcellos.action?idConc=";
     String[] provincias = new String[]{"Pontevedra", "Lugo", "Ourense", "A Coruña"};
     public String[] pontevedra = new String[]{"Arbo", "Barro", "Baiona", "Bueu", "Caldas de Reis",
             "Cambados", "Campo Lameiro", "Cangas", "A Cañiza", "Catoira", "Cerdedo", "Cotobade",
@@ -104,13 +104,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         sharedPreferences= getSharedPreferences("preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        int selectedProvincias = sharedPreferences.getInt("provincias", 0);// 0 es la posición por defecto
-        int selectedLocalidades = sharedPreferences.getInt("localidades", 0); // 0 es la posición por defecto
+        final boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
+        int targetMode = isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        if (AppCompatDelegate.getDefaultNightMode() != targetMode) {
+            AppCompatDelegate.setDefaultNightMode(targetMode);
+        }
+
+        final int selectedProvincias = sharedPreferences.getInt("provincias", 0);// 0 es la posición por defecto
+        final int selectedLocalidades = sharedPreferences.getInt("localidades", 0); // 0 es la posición por defecto
 
         //almacen=new AlmacenPreferencias(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.inflateMenu(R.menu.menu_main);
+            MenuItem themeItem = toolbar.getMenu().findItem(R.id.action_theme);
+            if (themeItem != null) {
+                themeItem.setIcon(isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon);
+            }
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.action_theme) {
+                        toggleTheme();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
 
 
         //Creamos los dos Spinner de Provincias y Localidades
@@ -118,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
         spinnerProvincias =  findViewById(R.id.provincia);
         spinnerLocalidades =  findViewById(R.id.localidad);
         pDialog =findViewById(R.id.pBar);
-        ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, provincias);
+        ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, provincias);
+        adapterProv.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         spinnerProvincias.setAdapter(adapterProv);
 
@@ -131,30 +156,36 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         idProv = 360;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, pontevedra);
-
-
+                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, pontevedra);
                         break;
                     case 1:
                         idProv = 270;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, lugo);
-
-
+                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, lugo);
                         break;
                     case 2:
                         idProv = 320;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, ourense);
-
+                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, ourense);
                         break;
                     case 3:
                         idProv = 150;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, coruna);
+                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, coruna);
                         break;
                 }
-                sharedPreferences.getInt("idProv", idProv);
+                
+                if (adapterLoc != null) {
+                    adapterLoc.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                }
+                
+                // Guardar la provincia seleccionada
+                sharedPreferences.edit().putInt("provincias", position).apply();
+
                 spinnerLocalidades.setAdapter(adapterLoc );
 
-
+                // Si es la carga inicial, seleccionamos la localidad guardada
+                if (isInitialLoad) {
+                    spinnerLocalidades.setSelection(selectedLocalidades);
+                    isInitialLoad = false;
+                }
             }
 
             @Override
@@ -167,10 +198,11 @@ public class MainActivity extends AppCompatActivity {
         spinnerLocalidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Toast.makeText(MainActivity.this, "locPosicion: " + position + " IdProv: " + idProv, Toast.LENGTH_SHORT).show();
+                // Guardar la localidad seleccionada
+                sharedPreferences.edit().putInt("localidades", position).apply();
+
                 idZona=idProv+String.format("%02d",position+1);
-                // Toast.makeText(MainActivity.this, "URL: " + URL+""+idZona, Toast.LENGTH_SHORT).show();
-                String enlaces=URL2+idZona+"&dia=0";
+                String enlaces=URL2+idZona;
 
                         try {
                             if (!isOnline(getApplicationContext())) {
@@ -191,9 +223,7 @@ public class MainActivity extends AppCompatActivity {
                                 builder.create();
                                 builder.show();
                             } else {
-                                new DownloadXML().execute(enlaces);
-                               // pDialog.hide();
-
+                                new DownloadJSON().execute(enlaces);
                             }
                         } catch (Exception e) {
                             Log.e("Error en comprobar conexion", e.getLocalizedMessage());
@@ -210,6 +240,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Configurar la provincia inicial cargada de las preferencias
+        spinnerProvincias.setSelection(selectedProvincias);
+
 
         TabLayout pestanas=findViewById(R.id.tabs);
 
@@ -218,19 +251,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 try {
-                    // Toast.makeText(MainActivity.this,"Seleccionado: "+tab.getText(),Toast.LENGTH_SHORT).show();
-                    if (tab.getText().equals("HOY")) {
-                        Toast.makeText(MainActivity.this, "Seleccionado hoy", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=0");
-                    }
-                    if (tab.getText().equals("MAÑANA")) {
-                        Toast.makeText(MainActivity.this, "Seleccionado mañana", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=1");
-                    }
-                    if (tab.getText().equals("PASADO")) {
-                        Toast.makeText(MainActivity.this, "Seleccionado pasado", Toast.LENGTH_SHORT).show();
-                        new DownloadXML().execute(URL2 + idZona + "&dia=2");
-                    }
+                    currentTabPosition = tab.getPosition();
+                    updateUIForDay(currentTabPosition);
                 }catch (Exception e){
                     Log.e("Error en OnTabSelected ",e.getLocalizedMessage());
                     e.printStackTrace();
@@ -253,147 +275,213 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class DownloadXML extends AsyncTask<String,Void,Void>{
+    private class DownloadJSON extends AsyncTask<String, Void, PrediccionResponse> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            MainActivity.this.pDialog.setVisibility(View.VISIBLE);
+            View container = MainActivity.this.findViewById(R.id.weatherDataContainer);
+            if (container != null) {
+                container.setVisibility(View.GONE);
+            }
         }
 
         @Override
-        protected Void doInBackground(String... Url) {
-            try{
-                URL url=new URL(Url[0]);
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db =dbf.newDocumentBuilder();
-                //Descargamos el XML
-                Document doc = db.parse(new InputSource(url.openStream()));
-                doc.getDocumentElement().normalize();
-                //Localizar el Nombre del TAG
-                nodelist=doc.getElementsByTagName("item");
-
-            }catch (Exception e){
-                MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
-                Log.e("Error en el doInBackground",e.getMessage());
+        protected PrediccionResponse doInBackground(String... Url) {
+            String jsonResult = "";
+            try {
+                URL url = new URL(Url[0]);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                
+                InputStream is = conn.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                is.close();
+                
+                jsonResult = sb.toString();
+                return new Gson().fromJson(jsonResult, PrediccionResponse.class);
+            } catch (Exception e) {
+                Log.e("Error en doInBackground", e.getMessage() != null ? e.getMessage() : "Error");
                 e.printStackTrace();
-            }  return null;
-
+                return null;
+            }
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-        }
-
-        @Override
-        protected void onPostExecute(Void args) {
-
-
-            for(int i=0;i<nodelist.getLength();i++){
-                Node nNode= nodelist.item(i);
-                NodeList datos=nNode.getChildNodes();
-                for (int j = 0; j < datos.getLength(); j++) {
-                    Node dato=datos.item(j);
-                    String etiq=dato.getNodeName();
-
-                    //Nombre del Concello
-                    if(etiq.equals("Concellos:nomeConcello")){
-                        textview=  findViewById(R.id.cityText);
-                        textview.setText(dato.getFirstChild().getNodeValue().toUpperCase());
-                    }
-                    //Temperatura Maxima
-                    //TEXTO
-                    if(etiq.equals("Concellos:tMax")){
-                        textview= findViewById(R.id.tempTextMax);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
-                        //IMAGEN
-                        new cargarImagenTempMax().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
-                    }
-
-                    //Temperatura Minima
-                    //TEXTO
-                    if(etiq.equals("Concellos:tMin")){
-                        textview= findViewById(R.id.tempTextMin);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"ºC");
-                        //IMAGEN
-                        new cargarImagenTempMin().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
-                    }
-
-                    //MAÑANA
-                    //Cielo
-
-                    if(etiq.equals("Concellos:ceoM")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
-                    }
-                    //Viento
-                    if(etiq.equals("Concellos:ventoM")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
-                    }
-
-                    //Lluvia
-                    if(etiq.equals("Concellos:pChoivaM")){
-                        textview= findViewById(R.id.textML);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
-                    }
-
-                    //TARDE
-                    //Cielo
-                    if(etiq.equals("Concellos:ceoT")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
-                    }
-                    //Viento
-                    if(etiq.equals("Concellos:ventoT")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
-                    }
-
-                    //Lluvia
-                    if(etiq.equals("Concellos:pChoivaT")){
-                        textview= findViewById(R.id.textTL);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
-                    }
-
-                    //NOCHE
-                    //Cielo
-                    if(etiq.equals("Concellos:ceoN")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenCieloN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/"+img+".png");
-                    }
-                    //Viento
-                    if(etiq.equals("Concellos:ventoN")){
-                        String img=dato.getFirstChild().getNodeValue();
-                        new cargarImagenVientoN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/"+img+".png");
-                    }
-
-                    //Lluvia
-                    if(etiq.equals("Concellos:pChoivaN")){
-                        textview= findViewById(R.id.textNL);
-                        textview.setText(dato.getFirstChild().getNodeValue()+"%");
-                    }
-
-                    //ULTIMA ACTUALIZACION
-
-                    if(etiq.equals("Concellos:dataCreacion")){
-                        textview= findViewById(R.id.txtActualizacion);
-                        textview.setText("Última Actualización: "+dato.getFirstChild().getNodeValue().substring(0,10));
-                    }
-
-                }
+            MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
+            View container = MainActivity.this.findViewById(R.id.weatherDataContainer);
+            if (container != null) {
+                container.setVisibility(View.VISIBLE);
             }
-
         }
 
         @Override
-        protected void onCancelled(Void aVoid) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setMessage("Alert!")
-                    .setTitle("Conectese a una red de datos para poder utilizar la aplicacion. Gracias")
-                    .create()
-                    .show();
+        protected void onPostExecute(PrediccionResponse result) {
+            MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
+            View container = MainActivity.this.findViewById(R.id.weatherDataContainer);
+            if (container != null) {
+                container.setVisibility(View.VISIBLE);
+            }
+            if (result != null && result.predConcello != null) {
+                currentPredConcello = result.predConcello;
+                updateUIForDay(currentTabPosition);
+            } else {
+                Toast.makeText(MainActivity.this, "Error al descargar la predicción", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private void updateUIForDay(int dayIndex) {
+        if (currentPredConcello == null || currentPredConcello.listaPredDiaConcello == null 
+                || dayIndex >= currentPredConcello.listaPredDiaConcello.size()) {
+            return;
+        }
+        
+        DiaConcello dia = currentPredConcello.listaPredDiaConcello.get(dayIndex);
+        
+        // Nombre del concello
+        TextView tvCity = findViewById(R.id.cityText);
+        if (tvCity != null) {
+            tvCity.setText(currentPredConcello.nome.toUpperCase());
+        }
+        
+        // Temperaturas máximas y mínimas
+        TextView tvTempMax = findViewById(R.id.tempTextMax);
+        if (tvTempMax != null) {
+            tvTempMax.setText(dia.tMax != null ? dia.tMax + "ºC" : "--ºC");
+            new cargarImagenTempMax().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
+        }
+        
+        TextView tvTempMin = findViewById(R.id.tempTextMin);
+        if (tvTempMin != null) {
+            tvTempMin.setText(dia.tMin != null ? dia.tMin + "ºC" : "--ºC");
+            new cargarImagenTempMin().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
+        }
+        
+        // Mañana: Cielo, Viento, Lluvia
+        if (dia.ceo != null && dia.ceo.manha != null) {
+            new cargarImagenCieloM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.manha + ".png");
+        }
+        if (dia.vento != null && dia.vento.manha != null) {
+            new cargarImagenVientoM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.manha + ".png");
+        }
+        TextView tvRainM = findViewById(R.id.textML);
+        if (tvRainM != null) {
+            tvRainM.setText(dia.pchoiva != null && dia.pchoiva.manha != null ? dia.pchoiva.manha + "%" : "00%");
+        }
+        
+        // Tarde: Cielo, Viento, Lluvia
+        if (dia.ceo != null && dia.ceo.tarde != null) {
+            new cargarImagenCieloT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.tarde + ".png");
+        }
+        if (dia.vento != null && dia.vento.tarde != null) {
+            new cargarImagenVientoT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.tarde + ".png");
+        }
+        TextView tvRainT = findViewById(R.id.textTL);
+        if (tvRainT != null) {
+            tvRainT.setText(dia.pchoiva != null && dia.pchoiva.tarde != null ? dia.pchoiva.tarde + "%" : "00%");
+        }
+        
+        // Noche: Cielo, Viento, Lluvia
+        if (dia.ceo != null && dia.ceo.noite != null) {
+            new cargarImagenCieloN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.noite + ".png");
+        }
+        if (dia.vento != null && dia.vento.noite != null) {
+            new cargarImagenVientoN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.noite + ".png");
+        }
+        TextView tvRainN = findViewById(R.id.textNL);
+        if (tvRainN != null) {
+            tvRainN.setText(dia.pchoiva != null && dia.pchoiva.noite != null ? dia.pchoiva.noite + "%" : "00%");
+        }
+        
+        // Fecha Predicción
+        TextView tvActualizacion = findViewById(R.id.txtActualizacion);
+        if (tvActualizacion != null && dia.dataPredicion != null) {
+            String rawDate = dia.dataPredicion.length() >= 10 ? dia.dataPredicion.substring(0, 10) : dia.dataPredicion;
+            String formattedDate = rawDate;
+            try {
+                String separator = "-";
+                if (rawDate.contains("/")) {
+                    separator = "/";
+                }
+                String[] parts = rawDate.split(separator);
+                if (parts.length == 3) {
+                    // Si el formato es yyyy-MM-dd, reordenamos a dd-MM-yyyy
+                    formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                }
+            } catch (Exception e) {
+                Log.e("Date Formatter", "Error formatting date: " + rawDate, e);
+            }
+            tvActualizacion.setText("Predicción: " + formattedDate);
+        }
+    }
+
+    private void toggleTheme() {
+        boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
+        boolean newMode = !isDarkMode;
+        sharedPreferences.edit().putBoolean("dark_mode", newMode).apply();
+        
+        int targetMode = newMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        AppCompatDelegate.setDefaultNightMode(targetMode);
+        recreate();
+    }
+
+    // Clases del Modelo de Datos para Gson
+    public static class PrediccionResponse {
+        public PredConcello predConcello;
+    }
+
+    public static class PredConcello {
+        public int idConcello;
+        public String nome;
+        public List<DiaConcello> listaPredDiaConcello;
+    }
+
+    public static class DiaConcello {
+        public String dataPredicion;
+        public Integer tMax;
+        public Integer tMin;
+        public Integer ceoDia;
+        public Integer uvMax;
+        public FranxaTemp tmaxFranxa;
+        public FranxaTemp tminFranxa;
+        public FranxaChoiva pchoiva;
+        public FranxaCeo ceo;
+        public FranxaVento vento;
+    }
+
+    public static class FranxaTemp {
+        public Integer manha;
+        public Integer tarde;
+        public Integer noite;
+    }
+
+    public static class FranxaChoiva {
+        public Integer manha;
+        public Integer tarde;
+        public Integer noite;
+    }
+
+    public static class FranxaCeo {
+        public Integer manha;
+        public Integer tarde;
+        public Integer noite;
+    }
+
+    public static class FranxaVento {
+        public Integer manha;
+        public Integer tarde;
+        public Integer noite;
     }
 
     private InputStream openHttpConnection(String url) throws IOException {
