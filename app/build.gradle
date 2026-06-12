@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "com.windmill.dam2.windmillweather"
         minSdkVersion  28
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode 1
         versionName "1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
