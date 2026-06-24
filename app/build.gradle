@@ -1,11 +1,26 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 35
+    compileSdk 37
+
+    Properties properties = new Properties()
+    if (project.rootProject.file('local.properties').exists()) {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../keystore/windmill_weather_upload.jks")
+            storePassword properties.getProperty('keystore.password')
+            keyAlias properties.getProperty('keystore.alias')
+            keyPassword properties.getProperty('keystore.password')
+        }
+    }
+
     defaultConfig {
         applicationId "com.windmill.dam2.windmillweather"
         minSdkVersion  28
-        targetSdkVersion 35
+        targetSdkVersion 37
         versionCode 1
         versionName "1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -14,7 +29,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
     namespace 'com.windmill.dam2.windmillweather'
