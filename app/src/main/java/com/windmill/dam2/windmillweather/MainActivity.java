@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt("localidades", position).apply();
 
                 idZona=idProv+String.format("%02d",position+1);
+                sharedPreferences.edit().putString("idZona", idZona).apply();
                 String enlaces=URL2+idZona;
 
                         try {

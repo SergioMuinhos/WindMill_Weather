@@ -3,7 +3,6 @@ package com.windmill.dam2.windmillweather;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,9 @@ import com.google.gson.Gson;
 import com.windmill.dam2.windmillweather.MainActivity.PrediccionResponse;
 import com.windmill.dam2.windmillweather.MainActivity.DiaConcello;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -25,6 +26,7 @@ import java.util.concurrent.Executors;
 public class WeatherWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = "WeatherWidgetProvider";
+    private static final String BASE_URL = "https://servizos.meteogalicia.gal/mgrss/predicion/jsonPredConcellos.action?idConc=";
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
@@ -34,38 +36,78 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, android.os.Bundle newOptions) {
+        updateAppWidget(context, appWidgetManager, appWidgetId);
+    }
+
     static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
+        // 1. Determine size and choose layout
+        android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        
+        final int layoutId = (minHeight < 100) ? R.layout.widget_weather_small : R.layout.widget_weather;
+        final RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+        
+        // PendingIntent to launch MainActivity on widget click
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 
+                0, 
+                intent, 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
+        
+        // Set some default text
+        if (layoutId == R.layout.widget_weather) {
+            views.setTextViewText(R.id.widget_status_text, "Actualizando...");
+        }
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+
+        // 2. Offload data loading and image processing to background thread
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     SharedPreferences prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+                    String idZona = prefs.getString("idZona", null);
                     String weatherJson = prefs.getString("last_weather_data", null);
+
+                    // Fetch fresh data if we have an idZona
+                    if (idZona != null && !idZona.isEmpty()) {
+                        String freshJson = downloadJson(BASE_URL + idZona);
+                        if (freshJson != null && !freshJson.isEmpty()) {
+                            weatherJson = freshJson;
+                            prefs.edit().putString("last_weather_data", weatherJson).apply();
+                        }
+                    }
                     
-                    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
+                    if (weatherJson != null && !weatherJson.isEmpty()) {
+                        PrediccionResponse response = null;
+                        try {
+                            response = new Gson().fromJson(weatherJson, PrediccionResponse.class);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing JSON", e);
+                        }
 
-                    // PendingIntent to launch MainActivity on widget click
-                    Intent intent = new Intent(context, MainActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(
-                            context, 
-                            0, 
-                            intent, 
-                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-                    );
-                    views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
-
-                    if (weatherJson != null) {
-                        PrediccionResponse response = new Gson().fromJson(weatherJson, PrediccionResponse.class);
                         if (response != null && response.predConcello != null && response.predConcello.listaPredDiaConcello != null && !response.predConcello.listaPredDiaConcello.isEmpty()) {
                             MainActivity.PredConcello concello = response.predConcello;
                             DiaConcello today = concello.listaPredDiaConcello.get(0);
                             
-                            views.setTextViewText(R.id.widget_city_name, concello.nome.toUpperCase());
+                            if (concello.nome != null) {
+                                views.setTextViewText(R.id.widget_city_name, concello.nome.toUpperCase());
+                            }
                             
                             String maxTempStr = today.tMax != null ? today.tMax + "ºC" : "--ºC";
                             String minTempStr = today.tMin != null ? today.tMin + "ºC" : "--ºC";
-                            views.setTextViewText(R.id.widget_temp_range, maxTempStr + " / " + minTempStr);
-                            views.setTextViewText(R.id.widget_status_text, "Predicción para hoy");
+                            
+                            if (layoutId == R.layout.widget_weather_small) {
+                                views.setTextViewText(R.id.widget_temp_range, maxTempStr);
+                            } else {
+                                views.setTextViewText(R.id.widget_temp_range, maxTempStr + " / " + minTempStr);
+                                views.setTextViewText(R.id.widget_status_text, "Predicción para hoy");
+                            }
 
                             // Download overall sky icon
                             Integer mainCeoId = today.ceoDia;
@@ -79,32 +121,54 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                                 }
                             }
 
-                            // Morning Period
-                            if (today.ceo != null && today.ceo.manha != null) {
-                                Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.manha + ".png");
-                                if (bitmap != null) {
-                                    views.setImageViewBitmap(R.id.widget_sky_m, bitmap);
+                            // Per-period data (only for large layout)
+                            if (layoutId == R.layout.widget_weather) {
+                                // Morning
+                                if (today.ceo != null && today.ceo.manha != null) {
+                                    Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.manha + ".png");
+                                    if (bitmap != null) {
+                                        views.setImageViewBitmap(R.id.widget_sky_m, bitmap);
+                                    }
                                 }
-                            }
-                            views.setTextViewText(R.id.widget_rain_m, today.pchoiva != null && today.pchoiva.manha != null ? today.pchoiva.manha + "%" : "00%");
+                                views.setTextViewText(R.id.widget_rain_m, today.pchoiva != null && today.pchoiva.manha != null ? today.pchoiva.manha + "%" : "00%");
 
-                            // Afternoon Period
-                            if (today.ceo != null && today.ceo.tarde != null) {
-                                Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.tarde + ".png");
-                                if (bitmap != null) {
-                                    views.setImageViewBitmap(R.id.widget_sky_t, bitmap);
+                                // Afternoon
+                                if (today.ceo != null && today.ceo.tarde != null) {
+                                    Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.tarde + ".png");
+                                    if (bitmap != null) {
+                                        views.setImageViewBitmap(R.id.widget_sky_t, bitmap);
+                                    }
                                 }
-                            }
-                            views.setTextViewText(R.id.widget_rain_t, today.pchoiva != null && today.pchoiva.tarde != null ? today.pchoiva.tarde + "%" : "00%");
+                                views.setTextViewText(R.id.widget_rain_t, today.pchoiva != null && today.pchoiva.tarde != null ? today.pchoiva.tarde + "%" : "00%");
 
-                            // Night Period
-                            if (today.ceo != null && today.ceo.noite != null) {
-                                Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.noite + ".png");
-                                if (bitmap != null) {
-                                    views.setImageViewBitmap(R.id.widget_sky_n, bitmap);
+                                // Night
+                                if (today.ceo != null && today.ceo.noite != null) {
+                                    Bitmap bitmap = downloadImage("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + today.ceo.noite + ".png");
+                                    if (bitmap != null) {
+                                        views.setImageViewBitmap(R.id.widget_sky_n, bitmap);
+                                    }
+                                }
+                                views.setTextViewText(R.id.widget_rain_n, today.pchoiva != null && today.pchoiva.noite != null ? today.pchoiva.noite + "%" : "00%");
+                                
+                                // Set update time (raw date string like "2026-06-05T00:00:00")
+                                if (today.dataPredicion != null) {
+                                    String rawDate = today.dataPredicion.length() >= 10 ? today.dataPredicion.substring(0, 10) : today.dataPredicion;
+                                    String formattedDate = rawDate;
+                                    try {
+                                        String[] parts = rawDate.split("-");
+                                        if (parts.length == 3) {
+                                            formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e(TAG, "Error formatting date", e);
+                                    }
+                                    views.setTextViewText(R.id.widget_update_time, formattedDate);
                                 }
                             }
-                            views.setTextViewText(R.id.widget_rain_n, today.pchoiva != null && today.pchoiva.noite != null ? today.pchoiva.noite + "%" : "00%");
+                        }
+                    } else {
+                        if (layoutId == R.layout.widget_weather) {
+                            views.setTextViewText(R.id.widget_status_text, "Abrir app para actualizar");
                         }
                     }
                     
@@ -114,6 +178,32 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                 }
             }
         });
+    }
+
+    private static String downloadJson(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.connect();
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream is = conn.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                is.close();
+                return sb.toString();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error downloading JSON: " + urlString, e);
+        }
+        return null;
     }
 
     private static Bitmap downloadImage(String urlString) {
