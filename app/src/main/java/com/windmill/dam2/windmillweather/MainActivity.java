@@ -325,10 +325,26 @@ public class MainActivity extends AppCompatActivity {
             if (result != null && result.predConcello != null) {
                 currentPredConcello = result.predConcello;
                 updateUIForDay(currentTabPosition);
+                try {
+                    String jsonString = new Gson().toJson(result);
+                    sharedPreferences.edit().putString("last_weather_data", jsonString).apply();
+                    updateWidget();
+                } catch (Exception e) {
+                    Log.e("MainActivity", "Error saving weather cache for widget", e);
+                }
             } else {
                 Toast.makeText(MainActivity.this, "Error al descargar la predicción", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void updateWidget() {
+        Intent intent = new Intent(this, WeatherWidgetProvider.class);
+        intent.setAction(android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = android.appwidget.AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new android.content.ComponentName(getApplication(), WeatherWidgetProvider.class));
+        intent.putExtra(android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     private void updateUIForDay(int dayIndex) {

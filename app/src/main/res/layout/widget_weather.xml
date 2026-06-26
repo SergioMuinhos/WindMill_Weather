@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_background"
+    android:padding="12dp">
+
+    <!-- Fila 1: Cabecera con Municipio y "Hoy" -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/widget_city_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="WINDMILL WEATHER"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_toStartOf="@+id/widget_label_today"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/widget_label_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Hoy"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_accent" />
+    </RelativeLayout>
+
+    <!-- Fila 2: Temperatura y Estado del Cielo de Hoy -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_temp_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--ºC / --ºC"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/widget_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abrir la app para actualizar"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/widget_weather_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Estado del Tiempo" />
+    </LinearLayout>
+
+    <!-- Separador -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/weather_outline"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Fila 3: Pronóstico por Periodos (Mañana, Tarde, Noche) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Mañana -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAÑANA"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary" />
+
+            <ImageView
+                android:id="@+id/widget_sky_m"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="2dp"
+                android:contentDescription="Previsión Mañana" />
+
+            <TextView
+                android:id="@+id/widget_rain_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--%"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <!-- Tarde -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TARDE"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary" />
+
+            <ImageView
+                android:id="@+id/widget_sky_t"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="2dp"
+                android:contentDescription="Previsión Tarde" />
+
+            <TextView
+                android:id="@+id/widget_rain_t"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--%"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <!-- Noche -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOCHE"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary" />
+
+            <ImageView
+                android:id="@+id/widget_sky_n"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="2dp"
+                android:contentDescription="Previsión Noche" />
+
+            <TextView
+                android:id="@+id/widget_rain_n"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--%"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
