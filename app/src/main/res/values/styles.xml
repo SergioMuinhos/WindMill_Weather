@@ -20,4 +20,14 @@
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
     </style>
 
+    <!-- Tema para la pantalla de carga oficial (API 12+) -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Color de fondo de la pantalla de carga (azul en claro, gris oscuro en noche) -->
+        <item name="windowSplashScreenBackground">@color/colorPrimary</item>
+        <!-- Icono central de la aplicación (utilizará el icono adaptable) -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- Tema que se aplica a la actividad tras cerrarse el splash screen -->
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
 </resources>

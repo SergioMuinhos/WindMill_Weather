@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.splashscreen.SplashScreen;
 import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         sharedPreferences= getSharedPreferences("preferences", MODE_PRIVATE);
         final boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
         int targetMode = isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
