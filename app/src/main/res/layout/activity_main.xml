@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
-        app:elevation="4dp">
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
-            app:title="WindMill Weather"
             app:titleCentered="true"
             app:titleTextColor="@android:color/white"
             app:layout_scrollFlags="scroll|enterAlways" />

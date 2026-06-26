@@ -14,9 +14,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.splashscreen.SplashScreen;
+import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        SplashScreen.installSplashScreen(this);
+        EdgeToEdge.enable(this);
         sharedPreferences= getSharedPreferences("preferences", MODE_PRIVATE);
         final boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
         int targetMode = isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
@@ -120,22 +121,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.inflateMenu(R.menu.menu_main);
-            MenuItem themeItem = toolbar.getMenu().findItem(R.id.action_theme);
-            if (themeItem != null) {
-                themeItem.setIcon(isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon);
-            }
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.action_theme) {
-                        toggleTheme();
-                        return true;
-                    }
-                    return false;
-                }
-            });
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
         }
 
 
@@ -648,6 +636,26 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
+        MenuItem themeItem = menu.findItem(R.id.action_theme);
+        if (themeItem != null) {
+            themeItem.setIcon(isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_theme) {
+            toggleTheme();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
