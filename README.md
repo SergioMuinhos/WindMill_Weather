@@ -16,6 +16,12 @@ Esta versión representa una modernización completa de una aplicación construi
     *   Sustitución de las flechas toscas del sistema por un chevron minimalista y estilizado (`ic_chevron_down.xml`).
     *   Eliminación de zonas blancas o contrastes deficientes en modo noche mediante la configuración global de los atributos M3 (`colorSurface`, `colorOnSurface`, `android:colorBackground`) y el uso de layouts personalizados para las listas del Spinner.
     *   Formateo de fechas adaptado al estándar estándar europeo `dd-MM-yyyy` (ej. `05-06-2026`).
+*   **SplashScreen Animado Adaptativo**: Pantalla de carga integrada que reproduce el GIF transparente `splash_clean.gif` centrado y adaptado dinámicamente al fondo del tema activo (azul para modo claro y gris oscuro para modo oscuro) logrando una experiencia de inicio inmersiva.
+*   **Widget de Escritorio Inteligente (App Widget)**:
+    *   Diseño en formato tarjeta Material Design con bordes redondeados y colores que se adaptan automáticamente al modo claro/oscuro del sistema operativo.
+    *   Soporte para múltiples dimensiones: diseño extendido grande (`4x2`) con desglose de pronóstico por períodos (Mañana, Tarde, Noche) y diseño compacto horizontal (`2x1` / `4x1`).
+    *   Actualización asíncrona periódica de red (cada 2 horas) con descarga en background de iconos meteorológicos, y actualización por broadcast instantáneo al cambiar de concello en la app.
+    *   Pulsar sobre el widget abre directamente la aplicación en la pantalla principal.
 
 ---
 
@@ -25,33 +31,50 @@ Para garantizar una construcción limpia sin conflictos de versiones del compila
 
 *   **JDK Mínimo**: Java 17
 *   **Android SDK**:
-    *   `compileSdk`: 34
+    *   `compileSdk`: 37
     *   `minSdk`: 28
-    *   `targetSdk`: 33
+    *   `targetSdk`: 37
 *   **AndroidX habilitado** con soporte para Jetifier en `gradle.properties`.
 
 ---
 
 ## 📦 Compilación local
 
-Para compilar el proyecto y generar el archivo APK de desarrollo, ejecuta el siguiente comando desde la raíz del proyecto:
+Para compilar el proyecto y generar los ejecutables, puedes usar los siguientes comandos desde la raíz del proyecto:
 
-### Windows (PowerShell / CMD):
+### Generar APK de desarrollo (Debug)
 ```powershell
+# Windows
 .\gradlew.bat assembleDebug
-```
 
-### Linux / macOS:
-```bash
+# Linux / macOS
 ./gradlew assembleDebug
 ```
+El APK se genera en: `app/build/outputs/apk/debug/app-debug.apk`
 
-El APK resultante se almacenará en la ruta:  
-`app/build/outputs/apk/debug/app-debug.apk`
+### Generar binarios de producción firmados (Release APK & AAB)
+```powershell
+# Windows
+.\gradlew.bat assembleRelease bundleRelease
+
+# Linux / macOS
+./gradlew assembleRelease bundleRelease
+```
+*   El **APK de Release** se genera en: `app/build/outputs/apk/release/app-release.apk` (copiado en la raíz como `WindMill_Weather_v1.3.apk`).
+*   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.3.aab`).
 
 ---
 
 ## 📝 Versiones y Cambios
+
+### Versión 1.3 (Junio 2026)
+*   **Widget de Escritorio**: Implementación de `WeatherWidgetProvider` con soporte para diseño grande (`4x2`) y diseño pequeño horizontal (`2x1`), descarga en background de iconos del cielo desde MeteoGalicia y sincronización mediante `SharedPreferences`.
+*   **Actualizaciones Automáticas**: Carga de fondo programada para actualizar el widget cada 2 horas y actualización forzada e inmediata al cambiar la ubicación en la app.
+*   **Target SDK 37**: Actualización de versión de API de compilación y destino para cumplir con los estándares de Google Play Console.
+
+### Versión 1.2 (Junio 2026)
+*   **SplashScreen con GIF Transparente**: Reversión de la API nativa a una pantalla de carga clásica con el GIF adaptativo y transparente `splash_clean.gif`.
+*   **Corrección de Iconos Toolbar**: Modificación de offsets vectoriales y viewport de `ic_moon.xml` y `ic_sun.xml` para resolver el recorte lateral del icono de luna en el toggle del modo oscuro.
 
 ### Versión 1.1 (Junio 2026)
 *   **Migración JSON**: Sustitución del parser XML e integración del parser Gson.
