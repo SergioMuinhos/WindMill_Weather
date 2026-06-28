@@ -85,4 +85,10 @@ El APK se genera en: `app/build/outputs/apk/debug/app-debug.apk`
 
 ---
 
+## 📄 Licencia
+
+Este proyecto está bajo una licencia de **Todos los derechos reservados** (All Rights Reserved). Queda prohibida la reproducción, distribución o modificación de este software y sus derivados sin la autorización previa y por escrito de su autor (**Sergio Muíños**). Consulta el archivo [LICENSE](file:///c:/Users/sergi/Documents/WindMill_Weather/LICENSE) para más detalles.
+
+---
+
 *Desarrollado como parte de la modernización del proyecto WindMill Weather.*
