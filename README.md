@@ -63,20 +63,34 @@ El APK se genera en: `app/build/outputs/apk/debug/app-debug.apk`
 *   El **APK de Release** se genera en: `app/build/outputs/apk/release/app-release.apk` (copiado en la raíz como `WindMill_Weather_v1.3.apk`).
 *   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.3.aab`).
 
+## 📦 Descarga de Binarios (Releases)
+
+Puedes descargar los paquetes compilados y firmados de cada versión directamente desde la sección de Releases del repositorio:
+
+*   **[Última Versión v1.3](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.3)**: Contiene el Widget de escritorio y soporte para la API 37 de Android.
+    *   Descargar APK: [WindMill_Weather_v1.3.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.3/WindMill_Weather_v1.3.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.3.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.3/WindMill_Weather_v1.3.aab)
+*   **[Versión v1.2](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.2)**: Contiene el SplashScreen animado adaptativo con GIF transparente.
+    *   Descargar APK: [WindMill_Weather_v1.2.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.2/WindMill_Weather_v1.2.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.2.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.2/WindMill_Weather_v1.2.aab)
+*   **[Versión v1.1](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.1)**: Contiene la migración completa a la API JSON, modo oscuro y Material Design 3.
+    *   Descargar APK: [WindMill_Weather_v1.1.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.1/WindMill_Weather_v1.1.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.1.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.1/WindMill_Weather_v1.1.aab)
+
 ---
 
 ## 📝 Versiones y Cambios
 
-### Versión 1.3 (Junio 2026)
+### [Versión 1.3 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.3)
 *   **Widget de Escritorio**: Implementación de `WeatherWidgetProvider` con soporte para diseño grande (`4x2`) y diseño pequeño horizontal (`2x1`), descarga en background de iconos del cielo desde MeteoGalicia y sincronización mediante `SharedPreferences`.
 *   **Actualizaciones Automáticas**: Carga de fondo programada para actualizar el widget cada 2 horas y actualización forzada e inmediata al cambiar la ubicación en la app.
 *   **Target SDK 37**: Actualización de versión de API de compilación y destino para cumplir con los estándares de Google Play Console.
 
-### Versión 1.2 (Junio 2026)
+### [Versión 1.2 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.2)
 *   **SplashScreen con GIF Transparente**: Reversión de la API nativa a una pantalla de carga clásica con el GIF adaptativo y transparente `splash_clean.gif`.
 *   **Corrección de Iconos Toolbar**: Modificación de offsets vectoriales y viewport de `ic_moon.xml` y `ic_sun.xml` para resolver el recorte lateral del icono de luna en el toggle del modo oscuro.
 
-### Versión 1.1 (Junio 2026)
+### [Versión 1.1 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.1)
 *   **Migración JSON**: Sustitución del parser XML e integración del parser Gson.
 *   **Modo Oscuro Integrado**: Implementación del toggle de tema y persistencia de su estado.
 *   **Diseño M3**: Reorganización de layouts, optimización del espaciado, y sustitución de flechas por chevrons.
