@@ -14,8 +14,16 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable,Signature,InnerClasses,EnclosingMethod,*Annotation*
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep Gson classes
+-keep class com.google.gson.** { *; }
+
+# Keep MainActivity model classes from being obfuscated so Gson can map JSON fields
+-keep class com.windmill.dam2.windmillweather.MainActivity$PrediccionResponse { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$PredConcello { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$DiaConcello { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$FranxaTemp { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$FranxaChoiva { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$FranxaCeo { *; }
+-keep class com.windmill.dam2.windmillweather.MainActivity$FranxaVento { *; }
