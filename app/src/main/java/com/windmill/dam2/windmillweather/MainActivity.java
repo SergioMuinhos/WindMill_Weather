@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import androidx.activity.EdgeToEdge;
+import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.view.Menu;
@@ -262,7 +263,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
+        if (nestedScrollView != null) {
+            nestedScrollView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+                @Override
+                public void onSwipeLeft() {
+                    int nextTab = currentTabPosition + 1;
+                    if (nextTab < pestanas.getTabCount()) {
+                        TabLayout.Tab tab = pestanas.getTabAt(nextTab);
+                        if (tab != null) {
+                            tab.select();
+                        }
+                    }
+                }
 
+                @Override
+                public void onSwipeRight() {
+                    int prevTab = currentTabPosition - 1;
+                    if (prevTab >= 0) {
+                        TabLayout.Tab tab = pestanas.getTabAt(prevTab);
+                        if (tab != null) {
+                            tab.select();
+                        }
+                    }
+                }
+            });
+        }
     }
 
 
