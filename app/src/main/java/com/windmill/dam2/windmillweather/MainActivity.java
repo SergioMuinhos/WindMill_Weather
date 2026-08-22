@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,12 +115,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Configuración de Idioma
-        String currentLang = sharedPreferences.getString("app_language", "system");
-        if (!"system".equals(currentLang)) {
-            LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(currentLang);
-            if (!appLocale.equals(AppCompatDelegate.getApplicationLocales())) {
-                AppCompatDelegate.setApplicationLocales(appLocale);
-            }
+        String currentLang = getSavedLanguage();
+        LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(currentLang);
+        if (!appLocale.equals(AppCompatDelegate.getApplicationLocales())) {
+            AppCompatDelegate.setApplicationLocales(appLocale);
         }
 
         final int selectedProvincias = sharedPreferences.getInt("provincias", 0);
@@ -469,49 +468,31 @@ public class MainActivity extends AppCompatActivity {
         recreate();
     }
 
-    private void showLanguageDialog() {
-        String currentLang = sharedPreferences.getString("app_language", "system");
-        int selectedIndex = 2; // Predeterminado do sistema
-        if ("gl".equals(currentLang)) {
-            selectedIndex = 0;
-        } else if ("es".equals(currentLang)) {
-            selectedIndex = 1;
+    private String getSavedLanguage() {
+        String lang = sharedPreferences.getString("app_language", null);
+        if (lang == null || "system".equals(lang)) {
+            try {
+                Locale current = getResources().getConfiguration().getLocales().get(0);
+                if (current != null && current.getLanguage().toLowerCase().startsWith("gl")) {
+                    return "gl";
+                }
+            } catch (Exception e) {
+                Log.e("MainActivity", "Error getting system locale", e);
+            }
+            return "es";
         }
+        return lang;
+    }
 
-        final String[] languages = new String[]{
-                getString(R.string.language_galician),
-                getString(R.string.language_spanish),
-                getString(R.string.language_system)
-        };
-
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_language_title)
-                .setSingleChoiceItems(languages, selectedIndex, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String selectedLangCode = "system";
-                        if (which == 0) {
-                            selectedLangCode = "gl";
-                        } else if (which == 1) {
-                            selectedLangCode = "es";
-                        } else {
-                            selectedLangCode = "system";
-                        }
-                        dialog.dismiss();
-                        setAppLocale(selectedLangCode);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
+    private void toggleLanguage() {
+        String currentLang = getSavedLanguage();
+        String newLang = "gl".equalsIgnoreCase(currentLang) ? "es" : "gl";
+        setAppLocale(newLang);
     }
 
     private void setAppLocale(String langCode) {
         sharedPreferences.edit().putString("app_language", langCode).apply();
-        if ("system".equals(langCode)) {
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
-        } else {
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
-        }
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
         updateWidget();
         recreate();
     }
@@ -733,10 +714,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        
+        // Configurar Toggle de Tema (Sol / Luna)
         boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
         MenuItem themeItem = menu.findItem(R.id.action_theme);
         if (themeItem != null) {
             themeItem.setIcon(isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon);
+        }
+
+        // Configurar Toggle de Idioma (ES / GL)
+        MenuItem langItem = menu.findItem(R.id.action_language);
+        if (langItem != null) {
+            View actionView = langItem.getActionView();
+            if (actionView != null) {
+                TextView tvLang = actionView.findViewById(R.id.tvLanguageToggle);
+                String currentLang = getSavedLanguage();
+                if (tvLang != null) {
+                    tvLang.setText("gl".equalsIgnoreCase(currentLang) ? "GL" : "ES");
+                }
+                actionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLanguage();
+                    }
+                });
+            }
         }
         return true;
     }
@@ -747,7 +749,7 @@ public class MainActivity extends AppCompatActivity {
             toggleTheme();
             return true;
         } else if (item.getItemId() == R.id.action_language) {
-            showLanguageDialog();
+            toggleLanguage();
             return true;
         }
         return super.onOptionsItemSelected(item);
