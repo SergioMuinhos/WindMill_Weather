@@ -62,13 +62,22 @@ El APK se genera en: `app/build/outputs/apk/debug/app-debug.apk`
 ./gradlew assembleRelease bundleRelease
 ```
 *   El **APK de Release** se genera en: `app/build/outputs/apk/release/app-release.apk` (copiado en la raíz como `WindMill_Weather_v1.3.apk`).
-*   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.3.aab`).
+*   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.6.aab`).
 
 ## 📦 Descarga de Binarios (Releases)
 
 Puedes descargar los paquetes compilados y firmados de cada versión directamente desde la sección de Releases del repositorio:
 
-*   **[Última Versión v1.3](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.3)**: Contiene el Widget de escritorio y soporte para la API 37 de Android.
+*   **[Última Versión v1.6](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.6)**: Soporte completo para Galego / Español con botón interactivo ES / GL en la barra superior.
+    *   Descargar APK: [WindMill_Weather_v1.6.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.6/WindMill_Weather_v1.6.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.6.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.6/WindMill_Weather_v1.6.aab)
+*   **[Versión v1.5](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.5)**: Minificación y optimización R8/ProGuard.
+    *   Descargar APK: [WindMill_Weather_v1.5.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.5/WindMill_Weather_v1.5.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.5.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.5/WindMill_Weather_v1.5.aab)
+*   **[Versión v1.4](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.4)**: Navegación horizontal por gestos táctiles (Swipe) entre pestañas.
+    *   Descargar APK: [WindMill_Weather_v1.4.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.4/WindMill_Weather_v1.4.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.4.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.4/WindMill_Weather_v1.4.aab)
+*   **[Versión v1.3](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.3)**: Contiene el Widget de escritorio y soporte para la API 37 de Android.
     *   Descargar APK: [WindMill_Weather_v1.3.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.3/WindMill_Weather_v1.3.apk)
     *   Descargar AAB: [WindMill_Weather_v1.3.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.3/WindMill_Weather_v1.3.aab)
 *   **[Versión v1.2](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.2)**: Contiene el SplashScreen animado adaptativo con GIF transparente.
@@ -81,6 +90,16 @@ Puedes descargar los paquetes compilados y firmados de cada versión directament
 ---
 
 ## 📝 Versiones y Cambios
+
+### [Versión 1.6 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.6)
+*   **Localización en Galego**: Traducción completa de todos los elementos visuales, pestañas, descripciones y widgets a gallego y español.
+*   **Botón Conmutador ES / GL**: Botón interactivo en la barra superior que alterna de forma inmediata entre español y gallego con un solo toque y almacena la preferencia del usuario.
+
+### [Versión 1.5 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.5)
+*   **Minificación R8/ProGuard**: Reducción del tamaño del APK y obfuscación segura con reglas específicas para Gson.
+
+### [Versión 1.4 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.4)
+*   **Swipe Navigation**: Soporte para deslizamiento lateral para cambiar rápidamente entre Hoy, Mañana y Pasado.
 
 ### [Versión 1.3 (Junio 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.3)
 *   **Widget de Escritorio**: Implementación de `WeatherWidgetProvider` con soporte para diseño grande (`4x2`) y diseño pequeño horizontal (`2x1`), descarga en background de iconos del cielo desde MeteoGalicia y sincronización mediante `SharedPreferences`.
