@@ -13,7 +13,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
-        android:contentDescription="Estado" />
+        android:contentDescription="@string/widget_weather_state" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
         android:id="@+id/widget_label_today"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hoy"
+        android:text="@string/widget_today"
         android:textSize="10sp"
         android:textStyle="bold"
         android:textColor="@color/text_accent"

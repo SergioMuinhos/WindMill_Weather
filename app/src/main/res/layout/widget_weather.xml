@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="Hoy"
+            android:text="@string/widget_today"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@color/text_accent" />
@@ -64,7 +64,7 @@
                 android:id="@+id/widget_status_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Abrir la app para actualizar"
+                android:text="@string/widget_open_app"
                 android:textSize="11sp"
                 android:textColor="@color/text_secondary"
                 android:maxLines="1"
@@ -76,7 +76,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:contentDescription="Estado del Tiempo" />
+            android:contentDescription="@string/widget_weather_state" />
     </LinearLayout>
 
     <!-- Separador -->
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MAÑANA"
+                android:text="@string/tomorrow"
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
@@ -115,7 +115,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="Previsión Mañana" />
+                android:contentDescription="@string/morning" />
 
             <TextView
                 android:id="@+id/widget_rain_m"
@@ -138,7 +138,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TARDE"
+                android:text="@string/afternoon"
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
@@ -148,7 +148,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="Previsión Tarde" />
+                android:contentDescription="@string/afternoon" />
 
             <TextView
                 android:id="@+id/widget_rain_t"
@@ -171,7 +171,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NOCHE"
+                android:text="@string/night"
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
@@ -181,7 +181,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="Previsión Noche" />
+                android:contentDescription="@string/night" />
 
             <TextView
                 android:id="@+id/widget_rain_n"

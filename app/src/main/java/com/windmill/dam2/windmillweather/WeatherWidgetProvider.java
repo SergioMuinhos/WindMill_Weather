@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,28 +42,46 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
         updateAppWidget(context, appWidgetManager, appWidgetId);
     }
 
+    private static String getLocalizedText(Context context, int stringId) {
+        try {
+            SharedPreferences prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+            String lang = prefs.getString("app_language", "system");
+            if (!"system".equals(lang)) {
+                Locale locale = new Locale(lang);
+                android.content.res.Configuration config = new android.content.res.Configuration(context.getResources().getConfiguration());
+                config.setLocale(locale);
+                Context localizedContext = context.createConfigurationContext(config);
+                return localizedContext.getString(stringId);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting localized string", e);
+        }
+        return context.getString(stringId);
+    }
+
     static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
         // 1. Determine size and choose layout
         android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        
+
         final int layoutId = (minHeight < 100) ? R.layout.widget_weather_small : R.layout.widget_weather;
         final RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
-        
+
         // PendingIntent to launch MainActivity on widget click
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 
-                0, 
-                intent, 
+                context,
+                0,
+                intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
-        
+
         // Set some default text
         if (layoutId == R.layout.widget_weather) {
-            views.setTextViewText(R.id.widget_status_text, "Actualizando...");
+            views.setTextViewText(R.id.widget_status_text, getLocalizedText(context, R.string.widget_updating));
         }
+        views.setTextViewText(R.id.widget_label_today, getLocalizedText(context, R.string.widget_today));
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
         // 2. Offload data loading and image processing to background thread
@@ -82,7 +101,9 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                             prefs.edit().putString("last_weather_data", weatherJson).apply();
                         }
                     }
-                    
+
+                    views.setTextViewText(R.id.widget_label_today, getLocalizedText(context, R.string.widget_today));
+
                     if (weatherJson != null && !weatherJson.isEmpty()) {
                         PrediccionResponse response = null;
                         try {
@@ -94,19 +115,19 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                         if (response != null && response.predConcello != null && response.predConcello.listaPredDiaConcello != null && !response.predConcello.listaPredDiaConcello.isEmpty()) {
                             MainActivity.PredConcello concello = response.predConcello;
                             DiaConcello today = concello.listaPredDiaConcello.get(0);
-                            
+
                             if (concello.nome != null) {
                                 views.setTextViewText(R.id.widget_city_name, concello.nome.toUpperCase());
                             }
-                            
+
                             String maxTempStr = today.tMax != null ? today.tMax + "ºC" : "--ºC";
                             String minTempStr = today.tMin != null ? today.tMin + "ºC" : "--ºC";
-                            
+
                             if (layoutId == R.layout.widget_weather_small) {
                                 views.setTextViewText(R.id.widget_temp_range, maxTempStr);
                             } else {
                                 views.setTextViewText(R.id.widget_temp_range, maxTempStr + " / " + minTempStr);
-                                views.setTextViewText(R.id.widget_status_text, "Predicción para hoy");
+                                views.setTextViewText(R.id.widget_status_text, getLocalizedText(context, R.string.widget_forecast_today));
                             }
 
                             // Download overall sky icon
@@ -149,7 +170,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                                     }
                                 }
                                 views.setTextViewText(R.id.widget_rain_n, today.pchoiva != null && today.pchoiva.noite != null ? today.pchoiva.noite + "%" : "00%");
-                                
+
                                 // Set update time (raw date string like "2026-06-05T00:00:00")
                                 if (today.dataPredicion != null) {
                                     String rawDate = today.dataPredicion.length() >= 10 ? today.dataPredicion.substring(0, 10) : today.dataPredicion;
@@ -168,10 +189,10 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                         }
                     } else {
                         if (layoutId == R.layout.widget_weather) {
-                            views.setTextViewText(R.id.widget_status_text, "Abrir app para actualizar");
+                            views.setTextViewText(R.id.widget_status_text, getLocalizedText(context, R.string.widget_open_app));
                         }
                     }
-                    
+
                     appWidgetManager.updateAppWidget(appWidgetId, views);
                 } catch (Exception e) {
                     Log.e(TAG, "Error updating app widget " + appWidgetId, e);

@@ -17,6 +17,7 @@ Esta versión representa una modernización completa de una aplicación construi
     *   Eliminación de zonas blancas o contrastes deficientes en modo noche mediante la configuración global de los atributos M3 (`colorSurface`, `colorOnSurface`, `android:colorBackground`) y el uso de layouts personalizados para las listas del Spinner.
     *   Formateo de fechas adaptado al estándar estándar europeo `dd-MM-yyyy` (ej. `05-06-2026`).
 *   **SplashScreen Animado Adaptativo**: Pantalla de carga integrada que reproduce el GIF transparente `splash_clean.gif` centrado y adaptado dinámicamente al fondo del tema activo (azul para modo claro y gris oscuro para modo oscuro) logrando una experiencia de inicio inmersiva.
+*   **Soporte Multilingüe (Galego / Español)**: Soporte completo para Gallego (`gl`) y Español (`es`), con selector dinámico de idioma en la barra de herramientas y persistencia de la selección, además de respetar el idioma predeterminado del sistema.
 *   **Widget de Escritorio Inteligente (App Widget)**:
     *   Diseño en formato tarjeta Material Design con bordes redondeados y colores que se adaptan automáticamente al modo claro/oscuro del sistema operativo.
     *   Soporte para múltiples dimensiones: diseño extendido grande (`4x2`) con desglose de pronóstico por períodos (Mañana, Tarde, Noche) y diseño compacto horizontal (`2x1` / `4x1`).

@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UBICACIÓN"
+                        android:text="@string/location_header"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_secondary"
@@ -104,7 +104,7 @@
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
                             android:spinnerMode="dialog"
-                            android:contentDescription="Seleccionar Provincia" />
+                            android:contentDescription="@string/select_province" />
 
                         <ImageView
                             android:layout_width="24dp"
@@ -129,7 +129,7 @@
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
                             android:spinnerMode="dialog"
-                            android:contentDescription="Seleccionar Localidad" />
+                            android:contentDescription="@string/select_locality" />
 
                         <ImageView
                             android:layout_width="24dp"
@@ -163,7 +163,7 @@
                         android:id="@+id/cityText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="ESTACION"
+                        android:text="@string/station_header"
                         android:textAlignment="center"
                         android:textColor="@color/text_primary"
                         android:textSize="22sp"
@@ -177,7 +177,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Predicción: --/--/----"
+                        android:text="@string/prediction_prefix"
                         android:textAlignment="center"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
@@ -280,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"
-                android:text="Pronóstico por período"
+                android:text="@string/forecast_period_header"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -306,7 +306,7 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="Mañana"
+                        android:text="@string/morning"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -330,7 +330,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Cielo"
+                            android:text="@string/sky"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -354,7 +354,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Viento"
+                            android:text="@string/wind"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -379,7 +379,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Lluvia"
+                            android:text="@string/rain"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -407,7 +407,7 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="Tarde"
+                        android:text="@string/afternoon"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -431,7 +431,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Cielo"
+                            android:text="@string/sky"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -455,7 +455,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Viento"
+                            android:text="@string/wind"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -480,7 +480,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Lluvia"
+                            android:text="@string/rain"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -508,7 +508,7 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="Noche"
+                        android:text="@string/night"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -532,7 +532,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Cielo"
+                            android:text="@string/sky"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -556,7 +556,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Viento"
+                            android:text="@string/wind"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -581,7 +581,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Lluvia"
+                            android:text="@string/rain"
                             android:textColor="@color/text_secondary"
                             android:textSize="10sp" />
                     </LinearLayout>

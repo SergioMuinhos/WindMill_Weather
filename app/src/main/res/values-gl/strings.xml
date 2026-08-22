@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">WindMill Weather</string>
+    <string name="today">HOXE</string>
+    <string name="tomorrow">MAÑÁ</string>
+    <string name="after">PASADO MAÑÁ</string>
+    <string name="alert">ALERTA</string>
+
+    <!-- UI Labels -->
+    <string name="location_header">LOCALIZACIÓN</string>
+    <string name="select_province">Seleccionar Provincia</string>
+    <string name="select_locality">Seleccionar Concello</string>
+    <string name="station_header">ESTACIÓN</string>
+    <string name="prediction_prefix">Predición: </string>
+    <string name="forecast_period_header">Predición por períodos</string>
+    <string name="morning">Mañá</string>
+    <string name="afternoon">Tarde</string>
+    <string name="night">Noite</string>
+    <string name="sky">Ceo</string>
+    <string name="wind">Vento</string>
+    <string name="rain">Chuvia</string>
+
+    <!-- Dialogs & Error Messages -->
+    <string name="dialog_error_title">Erro</string>
+    <string name="dialog_no_connection">Conéctese a unha rede de datos para poder utilizar a aplicación.</string>
+    <string name="dialog_retry">Tentar de novo</string>
+    <string name="error_download_prediction">Erro ao descargar a predición</string>
+
+    <!-- Menu & Settings -->
+    <string name="action_theme_title">Cambiar Tema</string>
+    <string name="action_language_title">Cambiar Idioma</string>
+    <string name="dialog_language_title">Seleccionar Idioma</string>
+    <string name="language_galician">Galego</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_system">Predeterminado do sistema</string>
+
+    <!-- Widget Strings -->
+    <string name="widget_today">Hoxe</string>
+    <string name="widget_updating">Actualizando...</string>
+    <string name="widget_open_app">Abrir app para actualizar</string>
+    <string name="widget_forecast_today">Predición para hoxe</string>
+    <string name="widget_weather_state">Estado do Tempo</string>
+</resources>
