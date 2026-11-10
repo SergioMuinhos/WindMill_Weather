@@ -408,7 +408,7 @@
                             android:layout_height="45dp"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/wind"
-                            android:tint="@color/wind_icon_tint" />
+                            app:tint="@color/wind_icon_tint" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -510,7 +510,7 @@
                             android:layout_height="45dp"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/wind"
-                            android:tint="@color/wind_icon_tint" />
+                            app:tint="@color/wind_icon_tint" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -612,7 +612,7 @@
                             android:layout_height="45dp"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/wind"
-                            android:tint="@color/wind_icon_tint" />
+                            app:tint="@color/wind_icon_tint" />
 
                         <TextView
                             android:layout_width="wrap_content"

@@ -7,28 +7,47 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <!--
+        MD3 / Material You: Theme.Material3.DayNight.NoActionBar ya incorpora todos los
+        color-roles de MD3. DynamicColors.applyToActivitiesIfAvailable() (en WindMillWeatherApp)
+        sobreescribe colorPrimary y compañía con los colores del fondo de pantalla en Android 12+.
+        En Android < 12 se usan los colores definidos aquí como fallback.
+    -->
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Colores de marca (fallback para dispositivos sin Dynamic Colors) -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/weather_secondary</item>
+        <item name="colorTertiary">@color/weather_primary_container</item>
 
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+        <!-- Superficie y fondo -->
         <item name="android:windowBackground">@color/weather_background</item>
         <item name="android:colorBackground">@color/weather_background</item>
         <item name="colorSurface">@color/weather_surface</item>
         <item name="colorSurfaceVariant">@color/weather_surface</item>
+
+        <!-- Texto sobre superficie -->
         <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <!-- Sistema de barras (edge-to-edge) -->
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        
-        <!-- styling for Material components -->
+
+        <!-- Sin ActionBar (gestionado por Toolbar) -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!-- MD3 Components -->
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
+        <item name="tabStyle">@style/Widget.Material3.TabLayout</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Material3.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Material3.LargeComponent</item>
     </style>
 
 </resources>

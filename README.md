@@ -61,15 +61,18 @@ El APK se genera en: `app/build/outputs/apk/debug/app-debug.apk`
 # Linux / macOS
 ./gradlew assembleRelease bundleRelease
 ```
-*   El **APK de Release** se genera en: `app/build/outputs/apk/release/app-release.apk` (copiado en la raíz como `WindMill_Weather_v1.0.17.apk`).
-*   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.0.17.aab`).
-*   Las notas de lanzamiento para Google Play Console están en `release_notes_v1.0.17.xml`.
+*   El **APK de Release** se genera en: `app/build/outputs/apk/release/app-release.apk` (copiado en la raíz como `WindMill_Weather_v1.8.apk`).
+*   El **App Bundle (.aab)** se genera en: `app/build/outputs/bundle/release/app-release.aab` (copiado en la raíz como `WindMill_Weather_v1.8.aab`).
+*   Las notas de lanzamiento para Google Play Console están en `release_notes_v1.8.xml`.
 
 ## 📦 Descarga de Binarios (Releases)
 
 Puedes descargar los paquetes compilados y firmados de cada versión directamente desde la sección de Releases del repositorio:
 
-*   **[Última Versión v1.0.17](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.0.17)**: Selección de ubicación con buscador, modo sin conexión, widget adaptativo y mejor diseño en tablets.
+*   **[Última Versión v1.8](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.8)**: Corrección de crash en hilo secundario (viento de la tarde), estabilidad en cambio de idioma y widget, compatibilidad Android 15/16 y Material 3 Dynamic Colors.
+    *   Descargar APK: [WindMill_Weather_v1.8.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.8/WindMill_Weather_v1.8.apk)
+    *   Descargar AAB: [WindMill_Weather_v1.8.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.8/WindMill_Weather_v1.8.aab)
+*   **[Versión v1.0.17](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.0.17)**: Selección de ubicación con buscador, modo sin conexión, widget adaptativo y mejor diseño en tablets.
     *   Descargar APK: [WindMill_Weather_v1.0.17.apk](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.0.17/WindMill_Weather_v1.0.17.apk)
     *   Descargar AAB: [WindMill_Weather_v1.0.17.aab](https://github.com/SergioMuinhos/WindMill_Weather/releases/download/v1.0.17/WindMill_Weather_v1.0.17.aab)
 *   **[Versión v1.6](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.6)**: Soporte completo para Galego / Español con botón interactivo ES / GL en la barra superior.
@@ -94,6 +97,13 @@ Puedes descargar los paquetes compilados y firmados de cada versión directament
 ---
 
 ## 📝 Versiones y Cambios
+
+### [Versión 1.8 (Noviembre 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.8)
+*   **Corrección de crash en hilo secundario**: eliminación de llamadas a vistas UI desde hilos en segundo plano (`CalledFromWrongThreadException`) al actualizar la predicción y el viento de la tarde.
+*   **Soporte de Dynamic Colors de Material 3**: integración de colores dinámicos del sistema en `WindMillWeatherApp`.
+*   **Prevención de condiciones de carrera en el Widget**: control de concurrencia mediante `AtomicBoolean` al redimensionar o recibir múltiples actualizaciones seguidas.
+*   **Mayor fluidez en el cambio de idioma**: bloqueo de pulsaciones duplicadas durante la recreación de la actividad para evitar parpadeos y excepciones.
+*   **Estabilidad en emuladores y red**: configuración optimizada de DNS y resolución de peticiones meteorológicas.
 
 ### [Versión 1.0.17 (Noviembre 2026)](https://github.com/SergioMuinhos/WindMill_Weather/releases/tag/v1.0.17)
 *   **Selección de ubicación mejorada**: diálogos de provincia y localidad con título, opción actual marcada y buscador con normalización de acentos.

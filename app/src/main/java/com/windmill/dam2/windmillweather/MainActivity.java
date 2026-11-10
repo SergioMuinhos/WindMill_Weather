@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_CURRENT_TAB = "current_tab";
     private static final String PREF_LAST_WEATHER_ZONE = "last_weather_idZona";
 
+    // Bug fix: evitar crash por pulsaciones rápidas del toggle de idioma
+    private volatile boolean isLocaleChanging = false;
+
     public String URL2 = "https://servizos.meteogalicia.gal/mgrss/predicion/jsonPredConcellos.action?idConc=";
     String[] provincias = new String[]{"Pontevedra", "Lugo", "Ourense", "A Coruña"};
     public String[] pontevedra = new String[]{"Arbo", "Barro", "Baiona", "Bueu", "Caldas de Reis",
@@ -923,6 +926,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toggleLanguage() {
+        // Bug fix: ignorar pulsaciones mientras se está cambiando el idioma
+        if (isLocaleChanging) return;
+        isLocaleChanging = true;
         String currentLang = getSavedLanguage();
         String newLang = "gl".equalsIgnoreCase(currentLang) ? "es" : "gl";
         setAppLocale(newLang);
@@ -931,7 +937,12 @@ public class MainActivity extends AppCompatActivity {
     private void setAppLocale(String langCode) {
         sharedPreferences.edit().putString("app_language", langCode).apply();
         updateWidget();
-        recreate();
+        // Pequeño delay para evitar que Activity se destruya antes de que el handler esté listo
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (!isFinishing() && !isDestroyed()) {
+                recreate();
+            }
+        }, 150);
     }
 
     // Clases del Modelo de Datos para Gson
@@ -1130,7 +1141,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(String... strings) {
-            pDialog.setVisibility(View.GONE);
             return downloadImage(strings[0]);
         }
 
@@ -1205,5 +1215,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reset locale-changing flag al volver a la actividad tras el recreate
+        isLocaleChanging = false;
     }
 }

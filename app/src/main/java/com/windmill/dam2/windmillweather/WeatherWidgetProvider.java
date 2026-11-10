@@ -23,14 +23,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WeatherWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = "WeatherWidgetProvider";
     private static final String BASE_URL = "https://servizos.meteogalicia.gal/mgrss/predicion/jsonPredConcellos.action?idConc=";
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    // Bug fix: evitar actualizaciones concurrentes del mismo widget al redimensionar rápido
+    private static final ConcurrentHashMap<Integer, AtomicBoolean> updatingWidgets = new ConcurrentHashMap<>();
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -69,6 +73,15 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
+        // Bug fix: si ya hay una actualización en curso para este widget, cancelar la anterior
+        // usando un AtomicBoolean por widget ID para evitar concurrencia en redimensionado rápido
+        AtomicBoolean flag = new AtomicBoolean(false);
+        AtomicBoolean existing = updatingWidgets.put(appWidgetId, flag);
+        if (existing != null) {
+            existing.set(true); // señal de cancelación para la tarea previa
+        }
+        final AtomicBoolean cancelled = flag;
+
         // 1. Determine size and choose layout
         android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
@@ -100,6 +113,8 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
             @Override
             public void run() {
                 try {
+                    // Bug fix: si una nueva actualización llegó antes que esta, abortar
+                    if (cancelled.get()) return;
                     SharedPreferences prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
                     String idZona = prefs.getString("idZona", null);
                     String weatherJson = prefs.getString("last_weather_data", null);
