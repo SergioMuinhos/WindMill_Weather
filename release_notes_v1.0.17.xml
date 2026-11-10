@@ -1,162 +1,188 @@
 <es-ES>
-Selecciona tu concello más rápido: los diálogos de ubicación ahora tienen buscador y marcan la opción actual.
-Sin conexión verás la última predicción guardada, con opción de reintentar o cambiar de ubicación.
-Etiquetas Máx./Mín. visibles, textos más legibles y widget adaptado al modo claro/oscuro.
-Arranque más rápido y mejor diseño en tablets.
+- Selector de ubicación con buscador y opción actual marcada.
+- Modo sin conexión con la última predicción guardada y opción de reintentar o cambiar de ubicación.
+- Etiquetas Máx./Mín. visibles, textos más legibles y mejor accesibilidad.
+- Widget adaptado al modo claro/oscuro, arranque más rápido y mejor diseño en tablets.
 </es-ES>
-<gl-ES>
-Escolle o teu concello máis rápido: os diálogos de localización agora teñen buscador e marcan a opción actual.
-Sen conexión verás a última predición gardada, con opción de reintentar ou cambiar de localización.
-Etiquetas Máx./Mín. visibles, textos máis lexibles e widget adaptado ao modo claro/escuro.
-Arranque máis rápido e mellor deseño en tabletas.
-</gl-ES>
-<en-US>
-Pick your town faster: location dialogs now include search and highlight the current choice.
-Offline, the app shows your last saved forecast and lets you retry or change location.
-Clearer High/Low labels, larger text, and a widget that follows the app's light/dark theme.
-Faster startup and a better layout on tablets.
-</en-US>
-<en-GB>
-Pick your location faster: location dialogs now include search and highlight the current choice.
-Offline, the app shows your last saved forecast and lets you retry or change location.
-Clearer High/Low labels, larger text, and a widget that follows the app's light/dark theme.
-Faster start-up and a better layout on tablets.
-</en-GB>
-<pt-PT>
-Escolha a sua localidade mais depressa: as janelas de localização têm pesquisa e destacam a opção atual.
-Sem ligação, a app mostra a última previsão guardada e permite tentar novamente ou mudar de localização.
-Etiquetas Máx./Mín. visíveis, texto maior e widget adaptado ao modo claro/escuro.
-Arranque mais rápido e melhor disposição em tablets.
-</pt-PT>
-<pt-BR>
-Escolha sua cidade mais rápido: as janelas de localização agora têm busca e destacam a opção atual.
-Sem conexão, o app mostra a última previsão salva e permite tentar de novo ou trocar de local.
-Rótulos Máx./Mín. visíveis, texto maior e widget que segue o tema claro/escuro.
-Abertura mais rápida e melhor layout em tablets.
-</pt-BR>
-<fr-FR>
-Choisissez votre commune plus vite : les fenêtres de localisation incluent une recherche et mettent en évidence le choix actuel.
-Hors ligne, l'app affiche la dernière prévision enregistrée et permet de réessayer ou de changer de lieu.
-Libellés Max./Min. visibles, textes plus grands et widget adapté au thème clair/sombre.
-Démarrage plus rapide et meilleure mise en page sur tablette.
-</fr-FR>
-<de-DE>
-Wähle deinen Ort schneller: Die Standortdialoge haben jetzt eine Suche und markieren die aktuelle Auswahl.
-Offline zeigt die App die zuletzt gespeicherte Vorhersage und bietet Wiederholen oder Standortwechsel an.
-Klarere Max./Min.-Beschriftungen, größere Texte und ein Widget, das dem Hell-/Dunkelmodus der App folgt.
-Schnellerer Start und ein besseres Layout auf Tablets.
-</de-DE>
-<it-IT>
-Scegli il tuo comune più rapidamente: le finestre di località ora hanno la ricerca e evidenziano la scelta attuale.
-Offline l'app mostra l'ultima previsione salvata e permette di riprovare o cambiare località.
-Etichette Max./Min. visibili, testi più grandi e widget adattato al tema chiaro/scuro.
-Avvio più rapido e layout migliore sui tablet.
-</it-IT>
-<nl-NL>
-Kies je plaats sneller: de locatiedialogen hebben nu zoeken en markeren de huidige keuze.
-Offline toont de app de laatst opgeslagen verwachting en kun je opnieuw proberen of van locatie wisselen.
-Duidelijkere Max./Min.-labels, grotere tekst en een widget die het licht/donker thema volgt.
-Sneller opstarten en een betere indeling op tablets.
-</nl-NL>
-<ca-ES>
-Tria el teu municipi més de pressa: els diàlegs d'ubicació ara tenen cercador i marquen l'opció actual.
-Sense connexió, l'app mostra la darrera predicció desada i permet tornar-ho a provar o canviar d'ubicació.
-Etiquetes Màx./Mín. visibles, textos més grans i widget adaptat al mode clar/fosc.
-Arrencada més ràpida i millor disseny a les tauletes.
-</ca-ES>
-<eu-ES>
-Aukeratu zure udalerria azkarrago: kokapen-leihoek bilatzailea dute orain eta uneko aukera markatzen dute.
-Konexiorik gabe, appak gordetako azken iragarpena erakusten du eta berriro saiatzeko edo kokapena aldatzeko aukera ematen du.
-Max./Min. etiketa argiagoak, testu handiagoa eta apparen argi/ilun modura egokitutako widgeta.
-Abio azkarragoa eta tabletetan diseinu hobea.
-</eu-ES>
-<ru-RU>
-Выбирайте населённый пункт быстрее: в окнах выбора теперь есть поиск и отметка текущего варианта.
-Без интернета приложение показывает последний сохранённый прогноз и позволяет повторить попытку или сменить место.
-Заметные подписи «Макс./Мин.», более крупный текст и виджет, следующий светлой или тёмной теме.
-Быстрый запуск и улучшенная раскладка на планшетах.
-</ru-RU>
-<uk-UA>
-Обирайте населений пункт швидше: у вікнах вибору тепер є пошук і позначка поточного варіанта.
-Без інтернету застосунок показує останній збережений прогноз і дає змогу повторити спробу або змінити місце.
-Помітні підписи «Макс./Мін.», більший текст і віджет, що відповідає світлій або темній темі.
-Швидший запуск і краще компонування на планшетах.
-</uk-UA>
-<pl-PL>
-Wybieraj miejscowość szybciej: okna lokalizacji mają teraz wyszukiwanie i zaznaczają bieżący wybór.
-Bez internetu aplikacja pokazuje ostatnią zapisaną prognozę i pozwala ponowić próbę lub zmienić lokalizację.
-Wyraźniejsze etykiety Maks./Min., większy tekst i widżet zgodny z trybem jasnym/ciemnym.
-Szybsze uruchamianie i lepszy układ na tabletach.
-</pl-PL>
-<ro-RO>
-Alege localitatea mai rapid: ferestrele de localizare au acum căutare și marchează opțiunea curentă.
-Fără internet, aplicația afișează ultima prognoză salvată și îți permite să reîncerci sau să schimbi locația.
-Etichete Max./Min. vizibile, text mai mare și widget adaptat temei deschise/închise.
-Pornire mai rapidă și un aspect mai bun pe tablete.
-</ro-RO>
+
 <cs-CZ>
-Vyberte obec rychleji: okna výběru nyní mají vyhledávání a zvýrazňují aktuální volbu.
-Bez připojení aplikace zobrazí poslední uloženou předpověď a umožní zkusit to znovu nebo změnit místo.
-Výraznější popisky Max./Min., větší text a widget respektující světlý/tmavý režim.
-Rychlejší spuštění a lepší rozvržení na tabletech.
+- Výběr lokality s vyhledáváním a označením aktuální volby.
+- Režim offline s poslední uloženou předpovědí a možností zkusit znovu nebo změnit místo.
+- Viditelné popisky Max./Min., větší text a lepší přístupnost.
+- Widget respektuje světlý/tmavý režim, rychlejší start a lepší rozvržení na tabletech.
 </cs-CZ>
-<sk-SK>
-Vyberte obec rýchlejšie: okná výberu teraz majú vyhľadávanie a zvýrazňujú aktuálnu voľbu.
-Bez pripojenia aplikácia zobrazí poslednú uloženú predpoveď a umožní skúsiť to znova alebo zmeniť miesto.
-Výraznejšie popisky Max./Min., väčší text a widget rešpektujúci svetlý/tmavý režim.
-Rýchlejší štart a lepšie rozloženie na tabletoch.
-</sk-SK>
-<hu-HU>
-Válasszon települést gyorsabban: a helyválasztó ablakokban most már kereshet, és kiemelik az aktuális választást.
-Internet nélkül az app a legutóbb mentett előrejelzést mutatja, és lehetőséget ad az újrapróbálkozásra vagy a hely módosítására.
-Jól látható Max./Min. feliratok, nagyobb szöveg és a világos/sötét témát követő widget.
-Gyorsabb indítás és jobb elrendezés tableteken.
-</hu-HU>
-<el-GR>
-Επιλέξτε την περιοχή σας πιο γρήγορα: τα παράθυρα τοποθεσίας έχουν τώρα αναζήτηση και επισημαίνουν την τρέχουσα επιλογή.
-Χωρίς σύνδεση, η εφαρμογή εμφανίζει την τελευταία αποθηκευμένη πρόγνωση και σας αφήνει να δοκιμάσετε ξανά ή να αλλάξετε τοποθεσία.
-Ευκρινείς ετικέτες Μέγ./Ελάχ., μεγαλύτερο κείμενο και widget που ακολουθεί το φωτεινό/σκοτεινό θέμα.
-Πιο γρήγορη εκκίνηση και καλύτερη διάταξη σε tablet.
-</el-GR>
-<tr-TR>
-Konumunuzu daha hızlı seçin: konum pencerelerinde artık arama var ve geçerli seçim vurgulanıyor.
-İnternet yokken uygulama son kaydedilen tahmini gösterir; yeniden denemenize veya konumu değiştirmenize olanak tanır.
-Daha belirgin Maks./Min. etiketleri, daha büyük metinler ve uygulamanın açık/koyu temasına uyan widget.
-Daha hızlı açılış ve tabletlerde daha iyi düzen.
-</tr-TR>
-<sv-SE>
-Välj din ort snabbare: platsdialogerna har nu sökning och markerar det aktuella valet.
-Utan nät visar appen den senast sparade prognosen och låter dig försöka igen eller byta plats.
-Tydligare Max./Min.-etiketter, större text och en widget som följer appens ljusa/mörka tema.
-Snabbare start och bättre layout på surfplattor.
-</sv-SE>
+
 <da-DK>
-Vælg din by hurtigere: lokationsdialogerne har nu søgning og fremhæver det aktuelle valg.
-Uden net viser appen den senest gemte prognose og lader dig prøve igen eller skifte lokation.
-Tydeligere Max./Min.-etiketter, større tekst og en widget, der følger appens lyse/mørke tema.
-Hurtigere opstart og bedre layout på tablets.
+- Lokationsvælger med søgning og markering af aktuelt valg.
+- Offlinetilstand med senest gemte prognose og mulighed for at prøve igen eller skifte lokation.
+- Tydelige Max./Min.-etiketter, større tekst og bedre tilgængelighed.
+- Widget følger lyst/mørkt tema, hurtigere opstart og bedre layout på tablets.
 </da-DK>
-<no-NO>
-Velg stedet ditt raskere: stedsdialogene har nå søk og uthever gjeldende valg.
-Uten nett viser appen den sist lagrede prognosen og lar deg prøve igjen eller bytte sted.
-Tydeligere Maks./Min.-etiketter, større tekst og en widget som følger appens lyse/mørke tema.
-Raskere oppstart og bedre oppsett på nettbrett.
-</no-NO>
+
+<de-DE>
+- Standortauswahl mit Suche und markierter aktueller Auswahl.
+- Offline-Modus mit zuletzt gespeicherter Vorhersage und Option zum Wiederholen oder Standortwechsel.
+- Sichtbare Max./Min.-Beschriftungen, größere Texte und bessere Barrierefreiheit.
+- Widget folgt Hell-/Dunkelmodus, schnellerer Start und besseres Tablet-Layout.
+</de-DE>
+
+<en-GB>
+- Location picker with search and current selection highlighted.
+- Offline mode with the last saved forecast and retry or change-location options.
+- Visible High/Low labels, larger text and better accessibility.
+- Widget follows light/dark theme, faster start-up and better tablet layout.
+</en-GB>
+
+<en-US>
+- Location picker with search and current selection highlighted.
+- Offline mode with the last saved forecast and retry or change-location options.
+- Visible High/Low labels, larger text and better accessibility.
+- Widget follows light/dark theme, faster startup and better tablet layout.
+</en-US>
+
+<es-419>
+- Selector de ubicación con buscador y opción actual marcada.
+- Modo sin conexión con la última predicción guardada y opción de reintentar o cambiar de ubicación.
+- Etiquetas Máx./Mín. visibles, textos más legibles y mejor accesibilidad.
+- Widget adaptado al modo claro/oscuro, arranque más rápido y mejor diseño en tablets.
+</es-419>
+
 <fi-FI>
-Valitse paikkakunta nopeammin: sijaintivalikoissa on nyt haku ja nykyinen valinta korostetaan.
-Ilman verkkoa sovellus näyttää viimeksi tallennetun ennusteen ja voit yrittää uudelleen tai vaihtaa sijaintia.
-Selkeämmät Maks./Min.-merkinnät, suurempi teksti ja sovelluksen vaaleaa/tummaa teemaa seuraava widget.
-Nopeampi käynnistys ja parempi asettelu tableteilla.
+- Sijaintivalitsin haulla ja nykyisen valinnan korostuksella.
+- Offline-tila viimeksi tallennetulla ennusteella sekä mahdollisuus yrittää uudelleen tai vaihtaa sijaintia.
+- Näkyvät Maks./Min.-merkinnät, suurempi teksti ja parempi saavutettavuus.
+- Widget seuraa vaaleaa/tummaa teemaa, nopeampi käynnistys ja parempi tablettiasettelu.
 </fi-FI>
-<hr-HR>
-Odaberite mjesto brže: prozori za odabir sada imaju pretraživanje i označavaju trenutni izbor.
-Bez interneta aplikacija prikazuje posljednju spremljenu prognozu i omogućuje ponovni pokušaj ili promjenu lokacije.
-Jasnije oznake Maks./Min., veći tekst i widget koji prati svijetlu/tamnu temu.
-Brže pokretanje i bolji raspored na tabletima.
-</hr-HR>
-<bg-BG>
-Изберете населено място по-бързо: прозорците за избор вече имат търсене и отбелязват текущата опция.
-Без интернет приложението показва последната запазена прогноза и ви позволява да опитате отново или да смените местоположението.
-По-ясни етикети Макс./Мин., по-голям текст и джаджа, която следва светлата/тъмната тема.
-По-бързо стартиране и по-добро оформление на таблети.
-</bg-BG>
+
+<fr-FR>
+- Sélecteur de lieu avec recherche et choix actuel mis en évidence.
+- Mode hors ligne avec la dernière prévision enregistrée et option de réessayer ou changer de lieu.
+- Libellés Max./Min. visibles, textes plus grands et meilleure accessibilité.
+- Widget adapté au thème clair/sombre, démarrage plus rapide et meilleure mise en page tablette.
+</fr-FR>
+
+<hu-HU>
+- Helyválasztó kereséssel és az aktuális kiválasztás kiemelésével.
+- Offline mód a legutóbb mentett előrejelzéssel, újrapróbálkozás vagy helymódosítás lehetőségével.
+- Látható Max./Min. feliratok, nagyobb szöveg és jobb akadálymentesség.
+- A widget követi a világos/sötét témát, gyorsabb indítás és jobb tablet-elrendezés.
+</hu-HU>
+
+<id>
+- Pemilih lokasi dengan pencarian dan pilihan saat ini ditandai.
+- Mode offline dengan prakiraan terakhir yang tersimpan serta opsi coba lagi atau ganti lokasi.
+- Label Maks./Min. terlihat, teks lebih besar, dan aksesibilitas lebih baik.
+- Widget mengikuti tema terang/gelap, startup lebih cepat, dan tata letak tablet lebih baik.
+</id>
+
+<it-IT>
+- Selettore località con ricerca e scelta attuale evidenziata.
+- Modalità offline con l'ultima previsione salvata e opzione per riprovare o cambiare località.
+- Etichette Max./Min. visibili, testi più grandi e migliore accessibilità.
+- Widget adattato al tema chiaro/scuro, avvio più rapido e layout tablet migliore.
+</it-IT>
+
+<iw-IL>
+- בורר מיקום עם חיפוש והדגשת הבחירה הנוכחית.
+- מצב לא מקוון עם התחזית האחרונה שנשמרה ואפשרות לנסות שוב או להחליף מיקום.
+- תוויות מקס./מינ. גלויות, טקסט גדול יותר ונגישות משופרת.
+- הווידג'ט מתאים למצב בהיר/כהה, הפעלה מהירה יותר ופריסת טאבלט טובה יותר.
+</iw-IL>
+
+<ja-JP>
+- 検索付きの場所選択と現在の選択肢の強調表示。
+- 最後に保存した予報を表示するオフラインモードと、再試行・場所変更オプション。
+- 最大/最小ラベルの表示、より大きな文字、アクセシビリティの向上。
+- ウィジェットがライト/ダークテーマに対応し、起動が高速化、タブレット表示も改善。
+</ja-JP>
+
+<ko-KR>
+- 검색과 현재 선택 항목 강조가 포함된 위치 선택기.
+- 마지막으로 저장된 예보를 보여주는 오프라인 모드와 재시도/위치 변경 옵션.
+- 최고/최저 라벨 표시, 더 큰 텍스트, 향상된 접근성.
+- 위젯이 라이트/다크 테마를 따르며, 더 빠른 시작과 개선된 태블릿 레이아웃.
+</ko-KR>
+
+<nl-NL>
+- Locatiekiezer met zoeken en huidige keuze gemarkeerd.
+- Offlinemodus met laatst opgeslagen verwachting en optie om opnieuw te proberen of van locatie te wisselen.
+- Zichtbare Max./Min.-labels, grotere tekst en betere toegankelijkheid.
+- Widget volgt licht/donker thema, snellere start en betere tabletindeling.
+</nl-NL>
+
+<no-NO>
+- Stedsvelger med søk og utheving av gjeldende valg.
+- Offlinemodus med sist lagrede prognose og valg om å prøve igjen eller bytte sted.
+- Synlige Maks./Min.-etiketter, større tekst og bedre tilgjengelighet.
+- Widget følger lyst/mørkt tema, raskere oppstart og bedre nettbrettlayout.
+</no-NO>
+
+<pt-BR>
+- Seletor de local com busca e opção atual destacada.
+- Modo offline com a última previsão salva e opção de tentar novamente ou trocar de local.
+- Rótulos Máx./Mín. visíveis, texto maior e melhor acessibilidade.
+- Widget segue o tema claro/escuro, abertura mais rápida e melhor layout em tablets.
+</pt-BR>
+
+<ro>
+- Selector de locație cu căutare și opțiunea curentă evidențiată.
+- Mod offline cu ultima prognoză salvată și opțiune de reîncercare sau schimbare a locației.
+- Etichete Max./Min. vizibile, text mai mare și accesibilitate îmbunătățită.
+- Widget adaptat temei deschise/închise, pornire mai rapidă și aspect mai bun pe tablete.
+</ro>
+
+<ru-RU>
+- Выбор места с поиском и подсветкой текущего варианта.
+- Офлайн-режим с последним сохранённым прогнозом и возможностью повторить или сменить место.
+- Видимые подписи «Макс./Мин.», более крупный текст и улучшенная доступность.
+- Виджет следует светлой/тёмной теме, быстрый запуск и улучшенная раскладка на планшетах.
+</ru-RU>
+
+<sk>
+- Výber lokality s vyhľadávaním a označením aktuálnej voľby.
+- Režim offline s poslednou uloženou predpoveďou a možnosťou skúsiť znova alebo zmeniť miesto.
+- Viditeľné popisky Max./Min., väčší text a lepšia prístupnosť.
+- Widget rešpektuje svetlý/tmavý režim, rýchlejší štart a lepšie rozloženie na tabletoch.
+</sk>
+
+<sv-SE>
+- Platsväljare med sökning och aktuellt val markerat.
+- Offlineläge med senast sparade prognos och möjlighet att försöka igen eller byta plats.
+- Tydliga Max./Min.-etiketter, större text och bättre tillgänglighet.
+- Widget följer ljust/mörkt tema, snabbare start och bättre surfplattelayout.
+</sv-SE>
+
+<th>
+- ตัวเลือกตำแหน่งพร้อมค้นหาและไฮไลต์ตัวเลือกปัจจุบัน
+- โหมดออฟไลน์แสดงพยากรณ์ล่าสุดที่บันทึกไว้ พร้อมตัวเลือกลองใหม่หรือเปลี่ยนตำแหน่ง
+- ป้ายสูงสุด/ต่ำสุดมองเห็นได้ชัด ข้อความใหญ่ขึ้น และการเข้าถึงดีขึ้น
+- วิดเจ็ตปรับตามธีมสว่าง/มืด เปิดแอปเร็วขึ้น และเลย์เอาต์แท็บเล็ตดีขึ้น
+</th>
+
+<tr-TR>
+- Arama ve geçerli seçimi vurgulayan konum seçici.
+- Son kaydedilen tahmini gösteren çevrimdışı mod ve yeniden deneme veya konum değiştirme seçeneği.
+- Görünür Maks./Min. etiketleri, daha büyük metin ve daha iyi erişilebilirlik.
+- Widget açık/koyu temayı izler, daha hızlı açılış ve daha iyi tablet düzeni.
+</tr-TR>
+
+<uk>
+- Вибір місця з пошуком і підсвічуванням поточного варіанта.
+- Офлайн-режим з останнім збереженим прогнозом і можливістю повторити або змінити місце.
+- Видимі підписи «Макс./Мін.», більший текст і краща доступність.
+- Віджет відповідає світлій/темній темі, швидший запуск і краще компонування на планшетах.
+</uk>
+
+<vi>
+- Bộ chọn vị trí có tìm kiếm và làm nổi bật lựa chọn hiện tại.
+- Chế độ ngoại tuyến với dự báo đã lưu gần nhất và tùy chọn thử lại hoặc đổi vị trí.
+- Nhãn Cao/Thấp rõ ràng, chữ lớn hơn và khả năng truy cập tốt hơn.
+- Widget theo chủ đề sáng/tối, khởi động nhanh hơn và bố cục máy tính bảng tốt hơn.
+</vi>
+
+<zh-CN>
+- 支持搜索并高亮当前选择的位置选择器。
+- 离线模式显示上次保存的预报，可重试或更改位置。
+- 清晰显示最高/最低标签，更大字体和更好的无障碍体验。
+- 小组件跟随浅色/深色主题，启动更快，平板布局更佳。
+</zh-CN>
