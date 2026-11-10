@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">WindMill Weather</string>
+    <string name="app_name_short">WindMill</string>
     <string name="today">HOY</string>
     <string name="tomorrow">MAÑANA</string>
     <string name="after">PASADO</string>
@@ -9,8 +10,18 @@
     <string name="location_header">UBICACIÓN</string>
     <string name="select_province">Seleccionar Provincia</string>
     <string name="select_locality">Seleccionar Localidad</string>
+    <string name="search_hint">Buscar localidad…</string>
+    <string name="no_results">Sin resultados</string>
+    <string name="temp_max_label">Máx.</string>
+    <string name="temp_min_label">Mín.</string>
+    <string name="loading_prediction">Cargando…</string>
+    <string name="error_update_message">No se pudo actualizar la predicción.</string>
+    <string name="cached_data_message">No se pudo actualizar. Mostrando los últimos datos guardados.</string>
+    <string name="dialog_change_location">Cambiar ubicación</string>
+    <string name="dialog_close">Cerrar</string>
     <string name="station_header">ESTACIÓN</string>
-    <string name="prediction_prefix">Predicción: </string>
+    <string name="prediction_prefix">Predicción:</string>
+    <string name="prediction_format">Predicción: %1$s</string>
     <string name="forecast_period_header">Pronóstico por períodos</string>
     <string name="morning">Mañana</string>
     <string name="afternoon">Tarde</string>
@@ -18,6 +29,60 @@
     <string name="sky">Cielo</string>
     <string name="wind">Viento</string>
     <string name="rain">Lluvia</string>
+    <string name="temp_max">Temperatura máxima</string>
+    <string name="temp_min">Temperatura mínima</string>
+    <string name="temp_max_desc">Máxima: %1$d grados</string>
+    <string name="temp_min_desc">Mínima: %1$d grados</string>
+    <string name="temp_max_unknown">Máxima desconocida</string>
+    <string name="temp_min_unknown">Mínima desconocida</string>
+    <string name="temp_unknown">Temperatura desconocida</string>
+    <string name="rain_desc">Lluvia: %1$s</string>
+    <string name="tab_today_desc">HOY, pestaña 1 de 3</string>
+    <string name="tab_tomorrow_desc">MAÑANA, pestaña 2 de 3</string>
+    <string name="tab_after_desc">PASADO, pestaña 3 de 3</string>
+
+    <!-- Sky state descriptions -->
+    <string name="sky_unknown">Estado del cielo desconocido</string>
+    <string name="sky_unknown_code">Estado del cielo: código %1$d</string>
+    <string name="sky_night_desc">Noche: %1$s</string>
+    <string name="sky_101">Despejado</string>
+    <string name="sky_102">Nubes altas</string>
+    <string name="sky_103">Nubes y claros</string>
+    <string name="sky_104">Nublado 75%</string>
+    <string name="sky_105">Muy nublado</string>
+    <string name="sky_106">Nieblas</string>
+    <string name="sky_107">Chubasco</string>
+    <string name="sky_108">Chubasco 75%</string>
+    <string name="sky_109">Chubasco de nieve</string>
+    <string name="sky_110">Llovizna</string>
+    <string name="sky_111">Lluvia</string>
+    <string name="sky_112">Nieve</string>
+    <string name="sky_113">Tormenta</string>
+    <string name="sky_114">Bruma</string>
+    <string name="sky_115">Bancos de niebla</string>
+    <string name="sky_116">Nubes medias</string>
+    <string name="sky_117">Lluvia débil</string>
+    <string name="sky_118">Chubascos débiles</string>
+    <string name="sky_119">Tormenta con pocas nubes</string>
+    <string name="sky_120">Aguanieve</string>
+    <string name="sky_121">Granizo</string>
+    <string name="sky_122">Nublado con chubascos débiles</string>
+    <string name="sky_123">Nublado con nieve</string>
+    <string name="sky_124">Calima</string>
+    <string name="sky_125">Cubierto</string>
+
+    <string name="wind_desc">Viento del %1$s</string>
+    <string name="wind_unknown">Dirección del viento desconocida</string>
+    <string-array name="wind_directions">
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SO</item>
+        <item>O</item>
+        <item>NO</item>
+    </string-array>
 
     <!-- Dialogs & Error Messages -->
     <string name="dialog_error_title">Error</string>
@@ -28,6 +93,9 @@
     <!-- Menu & Settings -->
     <string name="action_theme_title">Cambiar Tema</string>
     <string name="action_language_title">Cambiar Idioma</string>
+    <string name="switch_to_light">Cambiar a modo claro</string>
+    <string name="switch_to_dark">Cambiar a modo oscuro</string>
+    <string name="language_current">Idioma actual: %1$s. Cambiar a %2$s</string>
     <string name="dialog_language_title">Seleccionar Idioma</string>
     <string name="language_galician">Galego</string>
     <string name="language_spanish">Español</string>
@@ -39,4 +107,5 @@
     <string name="widget_open_app">Abrir app para actualizar</string>
     <string name="widget_forecast_today">Predicción para hoy</string>
     <string name="widget_weather_state">Estado del Tiempo</string>
+    <string name="widget_temp_desc">Máxima %1$s, mínima %2$s</string>
 </resources>

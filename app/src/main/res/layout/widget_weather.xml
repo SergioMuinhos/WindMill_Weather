@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="WINDMILL WEATHER"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:maxLines="1"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="@string/widget_today"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="@color/text_accent" />
     </RelativeLayout>
@@ -55,8 +55,8 @@
                 android:id="@+id/widget_temp_range"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="--ºC / --ºC"
-                android:textSize="22sp"
+                android:text="--&#160;°C / --&#160;°C"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_open_app"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:maxLines="1"
                 android:ellipsize="end" />
@@ -81,6 +81,7 @@
 
     <!-- Separador -->
     <FrameLayout
+        android:id="@+id/widget_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/weather_outline"
@@ -103,10 +104,11 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/widget_period_m_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tomorrow"
-                android:textSize="9sp"
+                android:text="@string/morning"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
 
@@ -115,14 +117,14 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="@string/morning" />
+                android:contentDescription="@string/sky" />
 
             <TextView
                 android:id="@+id/widget_rain_m"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--%"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="1dp" />
         </LinearLayout>
@@ -136,10 +138,11 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/widget_period_t_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/afternoon"
-                android:textSize="9sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
 
@@ -148,14 +151,14 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="@string/afternoon" />
+                android:contentDescription="@string/sky" />
 
             <TextView
                 android:id="@+id/widget_rain_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--%"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="1dp" />
         </LinearLayout>
@@ -169,10 +172,11 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/widget_period_n_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/night"
-                android:textSize="9sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary" />
 
@@ -181,14 +185,14 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:contentDescription="@string/night" />
+                android:contentDescription="@string/sky" />
 
             <TextView
                 android:id="@+id/widget_rain_n"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--%"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="1dp" />
         </LinearLayout>
@@ -201,7 +205,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="--/--/----"
-        android:textSize="8sp"
+        android:textSize="10sp"
         android:textColor="@color/text_secondary"
         android:layout_gravity="start" />
 

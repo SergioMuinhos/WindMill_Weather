@@ -16,7 +16,22 @@
     
     <!-- Textos -->
     <color name="text_primary">#1C2D42</color>
-    <color name="text_secondary">#607289</color>
-    <color name="text_accent">#0288D1</color>
-    <color name="tab_text_unselected">#B3E5FC</color>
+    <color name="text_secondary">#4F6177</color>
+    <color name="text_accent">#01579B</color>
+    <color name="tab_text_unselected">#E1F5FE</color>
+
+    <!-- Iconos -->
+    <color name="wind_icon_tint">#1C2D42</color>
+    <color name="temp_max">#C62828</color>
+    <color name="temp_min">#1565C0</color>
+
+    <!-- Colores explícitos del widget (independientes del modo del launcher) -->
+    <color name="widget_text_primary_light">#1C2D42</color>
+    <color name="widget_text_secondary_light">#4F6177</color>
+    <color name="widget_text_accent_light">#01579B</color>
+    <color name="widget_outline_light">#E0E4EB</color>
+    <color name="widget_text_primary_dark">#E1F5FE</color>
+    <color name="widget_text_secondary_dark">#B0BEC5</color>
+    <color name="widget_text_accent_dark">#4FC3F7</color>
+    <color name="widget_outline_dark">#2C2C2C</color>
 </resources>

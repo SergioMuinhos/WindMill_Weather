@@ -5,16 +5,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import androidx.activity.EdgeToEdge;
-import androidx.core.os.LocaleListCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -22,15 +28,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,6 +50,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar pDialog;
     static ImageView imgView;
     TabItem hoy, manana, pasado;
-    private boolean isInitialLoad = true;
     private PredConcello currentPredConcello;
     private int currentTabPosition = 0;
+    private boolean errorDialogShowing = false;
+    private static final String PREF_CURRENT_TAB = "current_tab";
+    private static final String PREF_LAST_WEATHER_ZONE = "last_weather_idZona";
 
     public String URL2 = "https://servizos.meteogalicia.gal/mgrss/predicion/jsonPredConcellos.action?idConc=";
     String[] provincias = new String[]{"Pontevedra", "Lugo", "Ourense", "A Coruña"};
@@ -103,6 +118,20 @@ public class MainActivity extends AppCompatActivity {
             "Vilasantar", "Vilarmaior", "Vimianzo", "Zas"};
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = newBase.getSharedPreferences("preferences", MODE_PRIVATE);
+        String lang = prefs.getString("app_language", null);
+        if (lang != null && !"system".equals(lang)) {
+            Locale locale = new Locale(lang);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration(newBase.getResources().getConfiguration());
+            config.setLocale(locale);
+            newBase = newBase.createConfigurationContext(config);
+        }
+        super.attachBaseContext(newBase);
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         EdgeToEdge.enable(this);
         sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
@@ -114,131 +143,83 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(targetMode);
         }
 
-        // Configuración de Idioma
-        String currentLang = getSavedLanguage();
-        LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(currentLang);
-        if (!appLocale.equals(AppCompatDelegate.getApplicationLocales())) {
-            AppCompatDelegate.setApplicationLocales(appLocale);
-        }
-
         final int selectedProvincias = sharedPreferences.getInt("provincias", 0);
         final int selectedLocalidades = sharedPreferences.getInt("localidades", 0);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final View appBar = findViewById(R.id.appbar);
+        if (appBar != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(appBar, (v, insets) -> {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(v.getPaddingLeft(), bars.top, v.getPaddingRight(), 0);
+                return insets;
+            });
+            ViewCompat.requestApplyInsets(appBar);
+        }
+
+        final NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+        if (scrollView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, insets) -> {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bars.bottom);
+                return insets;
+            });
+            ViewCompat.requestApplyInsets(scrollView);
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.app_name);
+            Configuration config = getResources().getConfiguration();
+            boolean useShortTitle = config.screenWidthDp < 400 || config.fontScale > 1.15f;
+            getSupportActionBar().setTitle(useShortTitle ? R.string.app_name_short : R.string.app_name);
         }
 
         // Spinner de Provincias y Localidades
         spinnerProvincias = findViewById(R.id.provincia);
         spinnerLocalidades = findViewById(R.id.localidad);
         pDialog = findViewById(R.id.pBar);
+
         ArrayAdapter<String> adapterProv = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, provincias);
         adapterProv.setDropDownViewResource(R.layout.spinner_dropdown_item);
-
         spinnerProvincias.setAdapter(adapterProv);
 
-        spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter<String> adapterLoc = null;
+        int safeProvincia = Math.max(0, Math.min(provincias.length - 1, selectedProvincias));
+        idProv = getProvinceId(safeProvincia);
+        ArrayAdapter<String> initialLocalityAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, getLocalitiesForProvince(safeProvincia));
+        initialLocalityAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerLocalidades.setAdapter(initialLocalityAdapter);
 
-                switch (position) {
-                    case 0:
-                        idProv = 360;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, pontevedra);
-                        break;
-                    case 1:
-                        idProv = 270;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, lugo);
-                        break;
-                    case 2:
-                        idProv = 320;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, ourense);
-                        break;
-                    case 3:
-                        idProv = 150;
-                        adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, coruna);
-                        break;
-                }
+        spinnerProvincias.setSelection(safeProvincia, false);
+        int safeLocalidad = Math.max(0, Math.min(selectedLocalidades, initialLocalityAdapter.getCount() - 1));
+        spinnerLocalidades.setSelection(safeLocalidad, false);
+        idZona = idProv + String.format("%02d", safeLocalidad + 1);
+        sharedPreferences.edit().putString("idZona", idZona).apply();
 
-                if (adapterLoc != null) {
-                    adapterLoc.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                }
+        setupSpinnerDialogs();
 
-                // Guardar la provincia seleccionada
-                sharedPreferences.edit().putInt("provincias", position).apply();
-
-                spinnerLocalidades.setAdapter(adapterLoc);
-
-                // Si es la carga inicial, seleccionamos la localidad guardada
-                if (isInitialLoad) {
-                    spinnerLocalidades.setSelection(selectedLocalidades);
-                    isInitialLoad = false;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinnerLocalidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Guardar la localidad seleccionada
-                sharedPreferences.edit().putInt("localidades", position).apply();
-
-                idZona = idProv + String.format("%02d", position + 1);
-                sharedPreferences.edit().putString("idZona", idZona).apply();
-                String enlaces = URL2 + idZona;
-
-                try {
-                    if (!isOnline(getApplicationContext())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setMessage(R.string.dialog_no_connection)
-                                .setTitle(R.string.dialog_error_title)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dialog_retry, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = getIntent();
-                                        finish();
-                                        startActivity(intent);
-                                    }
-                                });
-                        builder.create();
-                        builder.show();
-                    } else {
-                        new DownloadJSON().execute(enlaces);
-                    }
-                } catch (Exception e) {
-                    Log.e("Error conexion", e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "Error");
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinnerProvincias.setSelection(selectedProvincias);
+        currentTabPosition = sharedPreferences.getInt(PREF_CURRENT_TAB, 0);
+        currentTabPosition = Math.max(0, Math.min(2, currentTabPosition));
 
         TabLayout pestanas = findViewById(R.id.tabs);
         if (pestanas != null && pestanas.getTabCount() >= 3) {
             TabLayout.Tab t0 = pestanas.getTabAt(0);
-            if (t0 != null) t0.setText(R.string.today);
+            if (t0 != null) {
+                t0.setText(R.string.today);
+                t0.setContentDescription(getString(R.string.tab_today_desc));
+            }
             TabLayout.Tab t1 = pestanas.getTabAt(1);
-            if (t1 != null) t1.setText(R.string.tomorrow);
+            if (t1 != null) {
+                t1.setText(R.string.tomorrow);
+                t1.setContentDescription(getString(R.string.tab_tomorrow_desc));
+            }
             TabLayout.Tab t2 = pestanas.getTabAt(2);
-            if (t2 != null) t2.setText(R.string.after);
+            if (t2 != null) {
+                t2.setText(R.string.after);
+                t2.setContentDescription(getString(R.string.tab_after_desc));
+            }
         }
 
         pestanas.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -246,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 try {
                     currentTabPosition = tab.getPosition();
+                    sharedPreferences.edit().putInt(PREF_CURRENT_TAB, currentTabPosition).apply();
                     updateUIForDay(currentTabPosition);
                 } catch (Exception e) {
                     Log.e("Error en OnTabSelected", e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "Error");
@@ -290,9 +272,396 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        TabLayout.Tab restoredTab = pestanas.getTabAt(currentTabPosition);
+        if (restoredTab != null) {
+            restoredTab.select();
+        }
+
+        loadInitialWeather(savedInstanceState != null);
+        attachSpinnerListeners();
+    }
+
+    private int getProvinceId(int position) {
+        switch (position) {
+            case 1:
+                return 270;
+            case 2:
+                return 320;
+            case 3:
+                return 150;
+            case 0:
+            default:
+                return 360;
+        }
+    }
+
+    private String[] getLocalitiesForProvince(int position) {
+        switch (position) {
+            case 1:
+                return lugo;
+            case 2:
+                return ourense;
+            case 3:
+                return coruna;
+            case 0:
+            default:
+                return pontevedra;
+        }
+    }
+
+    private String getSelectedLocalityName() {
+        Object item = spinnerLocalidades.getSelectedItem();
+        return item != null ? item.toString() : "";
+    }
+
+    private void attachSpinnerListeners() {
+        spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                idProv = getProvinceId(position);
+                sharedPreferences.edit().putInt("provincias", position).apply();
+
+                ArrayAdapter<String> adapterLoc = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_item, getLocalitiesForProvince(position));
+                adapterLoc.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                spinnerLocalidades.setAdapter(adapterLoc);
+                spinnerLocalidades.setSelection(0, false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinnerLocalidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sharedPreferences.edit().putInt("localidades", position).apply();
+
+                idZona = idProv + String.format("%02d", position + 1);
+                sharedPreferences.edit().putString("idZona", idZona).apply();
+
+                setLoadingState(getSelectedLocalityName());
+                if (!isOnline(getApplicationContext())) {
+                    handleOfflineState();
+                    return;
+                }
+                new DownloadJSON(idZona).execute(URL2 + idZona);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void setupSpinnerDialogs() {
+        spinnerProvincias.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                showProvinceDialog();
+            }
+            return true;
+        });
+        spinnerLocalidades.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                showLocalityDialog();
+            }
+            return true;
+        });
+
+        spinnerProvincias.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                if (action == AccessibilityNodeInfo.ACTION_CLICK) {
+                    showProvinceDialog();
+                    return true;
+                }
+                return super.performAccessibilityAction(host, action, args);
+            }
+        });
+        spinnerLocalidades.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                if (action == AccessibilityNodeInfo.ACTION_CLICK) {
+                    showLocalityDialog();
+                    return true;
+                }
+                return super.performAccessibilityAction(host, action, args);
+            }
+        });
+    }
+
+    private void showProvinceDialog() {
+        int selected = spinnerProvincias.getSelectedItemPosition();
+        if (selected < 0) {
+            selected = 0;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.select_province)
+                .setSingleChoiceItems(provincias, selected, (dialog, which) -> {
+                    spinnerProvincias.setSelection(which);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showLocalityDialog() {
+        SpinnerAdapter adapter = spinnerLocalidades.getAdapter();
+        if (adapter == null || adapter.getCount() == 0) {
+            return;
+        }
+
+        List<String> labels = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            String label = String.valueOf(adapter.getItem(i));
+            if (!label.trim().isEmpty()) {
+                labels.add(label);
+                indices.add(i);
+            }
+        }
+
+        int selected = spinnerLocalidades.getSelectedItemPosition();
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_search_list, null);
+        EditText search = dialogView.findViewById(R.id.dialogSearch);
+        ListView list = dialogView.findViewById(R.id.dialogList);
+
+        List<String> filteredLabels = new ArrayList<>(labels);
+        List<Integer> filteredIndices = new ArrayList<>(indices);
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, filteredLabels);
+        list.setAdapter(listAdapter);
+
+        int checked = filteredIndices.indexOf(selected);
+        if (checked >= 0) {
+            list.setItemChecked(checked, true);
+            list.setSelection(checked);
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.select_locality)
+                .setView(dialogView)
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            int original = filteredIndices.get(position);
+            spinnerLocalidades.setSelection(original);
+            dialog.dismiss();
+        });
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = normalizeForSearch(s.toString());
+                filteredLabels.clear();
+                filteredIndices.clear();
+                for (int i = 0; i < labels.size(); i++) {
+                    if (query.isEmpty() || normalizeForSearch(labels.get(i)).contains(query)) {
+                        filteredLabels.add(labels.get(i));
+                        filteredIndices.add(indices.get(i));
+                    }
+                }
+                listAdapter.notifyDataSetChanged();
+                list.clearChoices();
+                int newChecked = filteredIndices.indexOf(selected);
+                if (newChecked >= 0) {
+                    list.setItemChecked(newChecked, true);
+                    list.setSelection(newChecked);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        dialog.show();
+    }
+
+    private static String normalizeForSearch(String value) {
+        if (value == null) {
+            return "";
+        }
+        String normalized = Normalizer.normalize(value, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase(Locale.getDefault());
+    }
+
+    private void loadInitialWeather(boolean isRecreate) {
+        boolean online = isOnline(getApplicationContext());
+        PrediccionResponse cached = getCachedResponseForCurrentZone();
+
+        if (isRecreate) {
+            if (cached != null && cached.predConcello != null) {
+                showCachedData(cached);
+                if (!online) {
+                    showCachedDataSnackbar();
+                }
+            } else if (online) {
+                setLoadingState(getSelectedLocalityName());
+                new DownloadJSON(idZona).execute(URL2 + idZona);
+            } else {
+                handleOfflineState();
+            }
+        } else if (online) {
+            setLoadingState(getSelectedLocalityName());
+            new DownloadJSON(idZona).execute(URL2 + idZona);
+        } else if (cached != null && cached.predConcello != null) {
+            showCachedData(cached);
+            showCachedDataSnackbar();
+        } else {
+            handleOfflineState();
+        }
+    }
+
+    private void setLoadingState(String localityName) {
+        TextView tvCity = findViewById(R.id.cityText);
+        if (tvCity != null) {
+            tvCity.setText(localityName != null && !localityName.isEmpty()
+                    ? localityName.toUpperCase(Locale.getDefault())
+                    : getString(R.string.station_header));
+        }
+        TextView tvDate = findViewById(R.id.txtActualizacion);
+        if (tvDate != null) {
+            tvDate.setText(R.string.loading_prediction);
+        }
+
+        TextView tvMax = findViewById(R.id.tempTextMax);
+        if (tvMax != null) {
+            tvMax.setText("--\u00A0°C");
+            tvMax.setContentDescription(getString(R.string.temp_max_unknown));
+        }
+        TextView tvMin = findViewById(R.id.tempTextMin);
+        if (tvMin != null) {
+            tvMin.setText("--\u00A0°C");
+            tvMin.setContentDescription(getString(R.string.temp_min_unknown));
+        }
+        TextView tvRainM = findViewById(R.id.textML);
+        if (tvRainM != null) {
+            tvRainM.setText("--%");
+            tvRainM.setContentDescription(getString(R.string.rain_desc, "--%"));
+        }
+        TextView tvRainT = findViewById(R.id.textTL);
+        if (tvRainT != null) {
+            tvRainT.setText("--%");
+            tvRainT.setContentDescription(getString(R.string.rain_desc, "--%"));
+        }
+        TextView tvRainN = findViewById(R.id.textNL);
+        if (tvRainN != null) {
+            tvRainN.setText("--%");
+            tvRainN.setContentDescription(getString(R.string.rain_desc, "--%"));
+        }
+
+        pDialog.setVisibility(View.VISIBLE);
+        View container = findViewById(R.id.weatherDataContainer);
+        if (container != null) {
+            container.setVisibility(View.GONE);
+        }
+    }
+
+    private void setErrorState() {
+        TextView tvDate = findViewById(R.id.txtActualizacion);
+        if (tvDate != null) {
+            tvDate.setText(R.string.error_download_prediction);
+        }
+        pDialog.setVisibility(View.GONE);
+        View container = findViewById(R.id.weatherDataContainer);
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private PrediccionResponse getCachedResponseForCurrentZone() {
+        String json = sharedPreferences.getString("last_weather_data", null);
+        String cachedZone = sharedPreferences.getString(PREF_LAST_WEATHER_ZONE, null);
+        if (json == null || cachedZone == null || idZona == null || !cachedZone.equals(idZona)) {
+            return null;
+        }
+        try {
+            return new Gson().fromJson(json, PrediccionResponse.class);
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error reading cached weather", e);
+            return null;
+        }
+    }
+
+    private void showCachedData(PrediccionResponse cached) {
+        if (cached == null || cached.predConcello == null) {
+            return;
+        }
+        currentPredConcello = cached.predConcello;
+        updateUIForDay(currentTabPosition);
+        pDialog.setVisibility(View.GONE);
+        View container = findViewById(R.id.weatherDataContainer);
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showCachedDataSnackbar() {
+        Snackbar.make(findViewById(android.R.id.content), R.string.cached_data_message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.dialog_retry, v -> reloadWeather())
+                .show();
+    }
+
+    private void handleOfflineState() {
+        PrediccionResponse cached = getCachedResponseForCurrentZone();
+        if (cached != null && cached.predConcello != null) {
+            showCachedData(cached);
+            showCachedDataSnackbar();
+        } else {
+            currentPredConcello = null;
+            setErrorState();
+            showOfflineDialog();
+        }
+    }
+
+    private void handleDownloadFailure() {
+        PrediccionResponse cached = getCachedResponseForCurrentZone();
+        if (cached != null && cached.predConcello != null) {
+            showCachedData(cached);
+            showCachedDataSnackbar();
+        } else {
+            currentPredConcello = null;
+            setErrorState();
+            showOfflineDialog();
+        }
+    }
+
+    private void showOfflineDialog() {
+        if (errorDialogShowing) {
+            return;
+        }
+        errorDialogShowing = true;
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_error_title)
+                .setMessage(R.string.error_update_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.dialog_retry, (d, which) -> {
+                    errorDialogShowing = false;
+                    reloadWeather();
+                })
+                .setNeutralButton(R.string.dialog_change_location, (d, which) -> {
+                    errorDialogShowing = false;
+                    showProvinceDialog();
+                })
+                .setNegativeButton(R.string.dialog_close, (d, which) -> errorDialogShowing = false)
+                .create();
+        dialog.setOnDismissListener(d -> errorDialogShowing = false);
+        dialog.show();
     }
 
     private class DownloadJSON extends AsyncTask<String, Void, PrediccionResponse> {
+
+        private final String zoneId;
+
+        DownloadJSON(String zoneId) {
+            this.zoneId = zoneId;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -311,6 +680,8 @@ public class MainActivity extends AppCompatActivity {
                 URL url = new URL(Url[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
+                conn.setConnectTimeout(8000);
+                conn.setReadTimeout(8000);
                 conn.connect();
 
                 InputStream is = conn.getInputStream();
@@ -335,7 +706,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
+            MainActivity.this.pDialog.setVisibility(View.GONE);
             View container = MainActivity.this.findViewById(R.id.weatherDataContainer);
             if (container != null) {
                 container.setVisibility(View.VISIBLE);
@@ -344,25 +715,43 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(PrediccionResponse result) {
-            MainActivity.this.pDialog.setVisibility(View.INVISIBLE);
-            View container = MainActivity.this.findViewById(R.id.weatherDataContainer);
-            if (container != null) {
-                container.setVisibility(View.VISIBLE);
+            if (!zoneId.equals(idZona)) {
+                return;
             }
             if (result != null && result.predConcello != null) {
                 currentPredConcello = result.predConcello;
                 updateUIForDay(currentTabPosition);
+                pDialog.setVisibility(View.GONE);
+                View container = findViewById(R.id.weatherDataContainer);
+                if (container != null) {
+                    container.setVisibility(View.VISIBLE);
+                }
                 try {
                     String jsonString = new Gson().toJson(result);
-                    sharedPreferences.edit().putString("last_weather_data", jsonString).apply();
+                    sharedPreferences.edit()
+                            .putString("last_weather_data", jsonString)
+                            .putString(PREF_LAST_WEATHER_ZONE, zoneId)
+                            .apply();
                     updateWidget();
                 } catch (Exception e) {
                     Log.e("MainActivity", "Error saving weather cache for widget", e);
                 }
             } else {
-                Toast.makeText(MainActivity.this, R.string.error_download_prediction, Toast.LENGTH_SHORT).show();
+                handleDownloadFailure();
             }
         }
+    }
+
+    private void reloadWeather() {
+        if (idZona == null || idZona.isEmpty()) {
+            return;
+        }
+        if (!isOnline(getApplicationContext())) {
+            handleOfflineState();
+            return;
+        }
+        setLoadingState(getSelectedLocalityName());
+        new DownloadJSON(idZona).execute(URL2 + idZona);
     }
 
     private void updateWidget() {
@@ -391,50 +780,98 @@ public class MainActivity extends AppCompatActivity {
         // Temperaturas máximas y mínimas
         TextView tvTempMax = findViewById(R.id.tempTextMax);
         if (tvTempMax != null) {
-            tvTempMax.setText(dia.tMax != null ? dia.tMax + "ºC" : "--ºC");
-            new cargarImagenTempMax().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/405.png");
+            String maxText = dia.tMax != null ? dia.tMax + "\u00A0°C" : "--\u00A0°C";
+            tvTempMax.setText(maxText);
+            tvTempMax.setContentDescription(dia.tMax != null
+                    ? getString(R.string.temp_max_desc, dia.tMax)
+                    : getString(R.string.temp_max_unknown));
         }
 
         TextView tvTempMin = findViewById(R.id.tempTextMin);
         if (tvTempMin != null) {
-            tvTempMin.setText(dia.tMin != null ? dia.tMin + "ºC" : "--ºC");
-            new cargarImagenTempMin().execute("https://servizos.meteogalicia.gal/datosred/infoweb/meteo/imagenes/termometros/400.png");
+            String minText = dia.tMin != null ? dia.tMin + "\u00A0°C" : "--\u00A0°C";
+            tvTempMin.setText(minText);
+            tvTempMin.setContentDescription(dia.tMin != null
+                    ? getString(R.string.temp_min_desc, dia.tMin)
+                    : getString(R.string.temp_min_unknown));
         }
 
         // Mañana: Cielo, Viento, Lluvia
-        if (dia.ceo != null && dia.ceo.manha != null) {
-            new cargarImagenCieloM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.manha + ".png");
+        ImageView imgSkyM = findViewById(R.id.imgMC);
+        if (imgSkyM != null) {
+            if (dia.ceo != null && dia.ceo.manha != null) {
+                imgSkyM.setContentDescription(WeatherDescriptions.getSkyDescription(this, dia.ceo.manha));
+                new cargarImagenCieloM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.manha + ".png");
+            } else {
+                imgSkyM.setContentDescription(getString(R.string.sky_unknown));
+            }
         }
-        if (dia.vento != null && dia.vento.manha != null) {
-            new cargarImagenVientoM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.manha + ".png");
+        ImageView imgWindM = findViewById(R.id.imgMV);
+        if (imgWindM != null) {
+            if (dia.vento != null && dia.vento.manha != null) {
+                imgWindM.setContentDescription(WeatherDescriptions.getWindDescription(this, dia.vento.manha));
+                new cargarImagenVientoM().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.manha + ".png");
+            } else {
+                imgWindM.setContentDescription(getString(R.string.wind_unknown));
+            }
         }
         TextView tvRainM = findViewById(R.id.textML);
         if (tvRainM != null) {
-            tvRainM.setText(dia.pchoiva != null && dia.pchoiva.manha != null ? dia.pchoiva.manha + "%" : "00%");
+            String rainM = dia.pchoiva != null && dia.pchoiva.manha != null ? dia.pchoiva.manha + "%" : "--%";
+            tvRainM.setText(rainM);
+            tvRainM.setContentDescription(getString(R.string.rain_desc, rainM));
         }
 
         // Tarde: Cielo, Viento, Lluvia
-        if (dia.ceo != null && dia.ceo.tarde != null) {
-            new cargarImagenCieloT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.tarde + ".png");
+        ImageView imgSkyT = findViewById(R.id.imgTC);
+        if (imgSkyT != null) {
+            if (dia.ceo != null && dia.ceo.tarde != null) {
+                imgSkyT.setContentDescription(WeatherDescriptions.getSkyDescription(this, dia.ceo.tarde));
+                new cargarImagenCieloT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.tarde + ".png");
+            } else {
+                imgSkyT.setContentDescription(getString(R.string.sky_unknown));
+            }
         }
-        if (dia.vento != null && dia.vento.tarde != null) {
-            new cargarImagenVientoT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.tarde + ".png");
+        ImageView imgWindT = findViewById(R.id.imgTV);
+        if (imgWindT != null) {
+            if (dia.vento != null && dia.vento.tarde != null) {
+                imgWindT.setContentDescription(WeatherDescriptions.getWindDescription(this, dia.vento.tarde));
+                new cargarImagenVientoT().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.tarde + ".png");
+            } else {
+                imgWindT.setContentDescription(getString(R.string.wind_unknown));
+            }
         }
         TextView tvRainT = findViewById(R.id.textTL);
         if (tvRainT != null) {
-            tvRainT.setText(dia.pchoiva != null && dia.pchoiva.tarde != null ? dia.pchoiva.tarde + "%" : "00%");
+            String rainT = dia.pchoiva != null && dia.pchoiva.tarde != null ? dia.pchoiva.tarde + "%" : "--%";
+            tvRainT.setText(rainT);
+            tvRainT.setContentDescription(getString(R.string.rain_desc, rainT));
         }
 
         // Noche: Cielo, Viento, Lluvia
-        if (dia.ceo != null && dia.ceo.noite != null) {
-            new cargarImagenCieloN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.noite + ".png");
+        ImageView imgSkyN = findViewById(R.id.imgNC);
+        if (imgSkyN != null) {
+            if (dia.ceo != null && dia.ceo.noite != null) {
+                imgSkyN.setContentDescription(WeatherDescriptions.getSkyDescription(this, dia.ceo.noite));
+                new cargarImagenCieloN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/ceo/" + dia.ceo.noite + ".png");
+            } else {
+                imgSkyN.setContentDescription(getString(R.string.sky_unknown));
+            }
         }
-        if (dia.vento != null && dia.vento.noite != null) {
-            new cargarImagenVientoN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.noite + ".png");
+        ImageView imgWindN = findViewById(R.id.imgNV);
+        if (imgWindN != null) {
+            if (dia.vento != null && dia.vento.noite != null) {
+                imgWindN.setContentDescription(WeatherDescriptions.getWindDescription(this, dia.vento.noite));
+                new cargarImagenVientoN().execute("https://www.meteogalicia.gal/datosred/infoweb/meteo/imagenes/meteoros/vento/" + dia.vento.noite + ".png");
+            } else {
+                imgWindN.setContentDescription(getString(R.string.wind_unknown));
+            }
         }
         TextView tvRainN = findViewById(R.id.textNL);
         if (tvRainN != null) {
-            tvRainN.setText(dia.pchoiva != null && dia.pchoiva.noite != null ? dia.pchoiva.noite + "%" : "00%");
+            String rainN = dia.pchoiva != null && dia.pchoiva.noite != null ? dia.pchoiva.noite + "%" : "--%";
+            tvRainN.setText(rainN);
+            tvRainN.setContentDescription(getString(R.string.rain_desc, rainN));
         }
 
         // Fecha Predicción
@@ -454,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("Date Formatter", "Error formatting date: " + rawDate, e);
             }
-            tvActualizacion.setText(getString(R.string.prediction_prefix) + formattedDate);
+            tvActualizacion.setText(getString(R.string.prediction_format, formattedDate));
         }
     }
 
@@ -465,6 +902,7 @@ public class MainActivity extends AppCompatActivity {
 
         int targetMode = newMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
         AppCompatDelegate.setDefaultNightMode(targetMode);
+        updateWidget();
         recreate();
     }
 
@@ -492,7 +930,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setAppLocale(String langCode) {
         sharedPreferences.edit().putString("app_language", langCode).apply();
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
         updateWidget();
         recreate();
     }
@@ -560,6 +997,8 @@ public class MainActivity extends AppCompatActivity {
         httpURLConnection.setAllowUserInteraction(false);
         httpURLConnection.setInstanceFollowRedirects(true);
         httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setConnectTimeout(8000);
+        httpURLConnection.setReadTimeout(8000);
         httpURLConnection.connect();
         responseCode = httpURLConnection.getResponseCode();
 
@@ -669,7 +1108,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgNV);
             imgView.setImageBitmap(bitmap);
-            pDialog.setVisibility(View.INVISIBLE);
+            pDialog.setVisibility(View.GONE);
         }
     }
 
@@ -691,7 +1130,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(String... strings) {
-            pDialog.setVisibility(View.INVISIBLE);
+            pDialog.setVisibility(View.GONE);
             return downloadImage(strings[0]);
         }
 
@@ -699,7 +1138,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             imgView = findViewById(R.id.imgTV);
             imgView.setImageBitmap(bitmap);
-            pDialog.setVisibility(View.INVISIBLE);
+            pDialog.setVisibility(View.GONE);
         }
     }
 
@@ -719,19 +1158,31 @@ public class MainActivity extends AppCompatActivity {
         boolean isDarkMode = sharedPreferences.getBoolean("dark_mode", false);
         MenuItem themeItem = menu.findItem(R.id.action_theme);
         if (themeItem != null) {
+            int themeTitle = isDarkMode ? R.string.switch_to_light : R.string.switch_to_dark;
+            themeItem.setTitle(themeTitle);
             themeItem.setIcon(isDarkMode ? R.drawable.ic_sun : R.drawable.ic_moon);
+            MenuItemCompat.setContentDescription(themeItem, getString(themeTitle));
         }
 
         // Configurar Toggle de Idioma (ES / GL)
         MenuItem langItem = menu.findItem(R.id.action_language);
         if (langItem != null) {
             View actionView = langItem.getActionView();
+            String currentLang = getSavedLanguage();
+            String currentName = "gl".equalsIgnoreCase(currentLang)
+                    ? getString(R.string.language_galician)
+                    : getString(R.string.language_spanish);
+            String targetName = "gl".equalsIgnoreCase(currentLang)
+                    ? getString(R.string.language_spanish)
+                    : getString(R.string.language_galician);
+            String languageDescription = getString(R.string.language_current, currentName, targetName);
             if (actionView != null) {
                 TextView tvLang = actionView.findViewById(R.id.tvLanguageToggle);
-                String currentLang = getSavedLanguage();
                 if (tvLang != null) {
                     tvLang.setText("gl".equalsIgnoreCase(currentLang) ? "GL" : "ES");
+                    tvLang.setContentDescription(languageDescription);
                 }
+                actionView.setContentDescription(languageDescription);
                 actionView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -739,6 +1190,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+            MenuItemCompat.setContentDescription(langItem, languageDescription);
         }
         return true;
     }
